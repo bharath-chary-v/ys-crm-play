@@ -107,6 +107,7 @@ export default function ClusterDashBoard() {
         const res = await CrmService.getCluster()
         console.log(res?.data?.data, `getData`)
         setCluster(res?.data?.data)
+        setClusterFilter(res?.data?.data)
     }
     useEffect(() => {
         getData()

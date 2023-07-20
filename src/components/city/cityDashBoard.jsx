@@ -25,7 +25,7 @@ export default function CityDashBoard() {
     })
     const submitHandler = async () => {
         if (!isUpdating) {
-            const res = await CrmService.addCity(citySchema).then((response) => {
+          await CrmService.addCity(citySchema).then((response) => {
                 toast.success(response?.data?.status);
                 setCitySchema("");
                 getData();
@@ -35,7 +35,7 @@ export default function CityDashBoard() {
                 toast.error(message);
             });
         } else {
-            const res = await CrmService.updateCity(citySchema).then((response) => {
+             await CrmService.updateCity(citySchema).then((response) => {
                 console.log()
                 toast.success(response?.data?.status);
                 setCitySchema("");
@@ -93,7 +93,7 @@ export default function CityDashBoard() {
             id: data?.id,
             is_deleted: true
         }
-        const res = await CrmService.updateCity(citySchema).then((response) => {
+        await CrmService.updateCity(citySchema).then((response) => {
             console.log()
             toast.success(response?.data?.status);
             setCitySchema("");

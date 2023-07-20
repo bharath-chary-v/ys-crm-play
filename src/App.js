@@ -1,7 +1,7 @@
 import './App.css';
-import CityDashBoard from './components/city/cityDashBoard';
+
 import SideNav from './components/sideNav/sideNav';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router} from 'react-router-dom';
 
 function App() {
   return (
