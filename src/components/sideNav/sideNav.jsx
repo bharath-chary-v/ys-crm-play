@@ -274,18 +274,12 @@ const SideNav = () => {
 
                     {/* Separator */}
                     <main >
-
                         
                             <Routes>
                                 <Route path="/city" element={<CityDashBoard />} />
                                 <Route path="/cluster" element={<ClusterDashBoard />} />
-
                                 {/* Add more routes here if needed */}
                             </Routes>
-                       
-
-
-
                     </main>
                 </div>
             </div>
