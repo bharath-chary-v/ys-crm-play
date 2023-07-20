@@ -1,21 +1,21 @@
 
 import { Fragment, useState } from 'react'
-import { Dialog, Menu, Transition } from '@headlessui/react'
+import { Dialog, Transition } from '@headlessui/react'
 import {
     Bars3Icon,
-    BellIcon,
-    CalendarIcon,
-    ChartPieIcon,
-    Cog6ToothIcon,
-    DocumentDuplicateIcon,
-    FolderIcon,
+    // BellIcon,
+    // CalendarIcon,
+    // ChartPieIcon,
+    // Cog6ToothIcon,
+    // DocumentDuplicateIcon,
+    // FolderIcon,
     HomeIcon,
-    UsersIcon,
+    // UsersIcon,
     XMarkIcon,
 } from '@heroicons/react/24/outline'
-import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
+// import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import CityDashBoard from '../city/cityDashBoard'
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import {  Route, Routes } from 'react-router-dom';
 import ClusterDashBoard from '../cluster/clusterDashBoard'
 
 
@@ -33,10 +33,10 @@ const teams = [
     //   { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
     //   { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
 ]
-const userNavigation = [
-    { name: 'Your profile', href: '#' },
-    { name: 'Sign out', href: '#' },
-]
+// const userNavigation = [
+//     { name: 'Your profile', href: '#' },
+//     { name: 'Sign out', href: '#' },
+// ]
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -101,9 +101,9 @@ const SideNav = () => {
                                             />
                                         </div>
                                         <nav className="flex flex-1 flex-col">
-                                            <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                                            <ul  className="flex flex-1 flex-col gap-y-7">
                                                 <li>
-                                                    <ul role="list" className="-mx-2 space-y-1">
+                                                    <ul  className="-mx-2 space-y-1">
                                                         {navigation.map((item) => (
                                                             <li key={item.name}>
                                                                 <a
@@ -130,7 +130,7 @@ const SideNav = () => {
                                                 </li>
                                                 <li>
                                                     <div className="text-xs font-semibold leading-6 text-gray-400">Your teams</div>
-                                                    <ul role="list" className="-mx-2 mt-2 space-y-1">
+                                                    <ul  className="-mx-2 mt-2 space-y-1">
                                                         {teams.map((team) => (
                                                             <li key={team.name}>
                                                                 <a
@@ -158,7 +158,7 @@ const SideNav = () => {
                                                         ))}
                                                     </ul>
                                                 </li>
-                                                <li className="mt-auto">
+                                                {/* <li className="mt-auto">
                                                     <a
                                                         href="#"
                                                         className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-orange-600"
@@ -169,7 +169,7 @@ const SideNav = () => {
                                                         />
                                                         Settings
                                                     </a>
-                                                </li>
+                                                </li> */}
                                             </ul>
                                         </nav>
                                     </div>
@@ -191,9 +191,9 @@ const SideNav = () => {
                             />
                         </div>
                         <nav className="flex flex-1 flex-col">
-                            <ul role="list" className="flex flex-1 flex-col gap-y-5">
+                            <ul  className="flex flex-1 flex-col gap-y-5">
                                 <li>
-                                    <ul role="list" className="-mx-2 space-y-1">
+                                    <ul  className="-mx-2 space-y-1">
                                         {navigation.map((item) => (
                                             <li key={item.name}>
                                                 <a
@@ -220,7 +220,7 @@ const SideNav = () => {
                                 </li>
                                 <li>
                                     {/* <div className="text-xs font-semibold leading-6 text-gray-400">Your teams</div> */}
-                                    <ul role="list" className="-mx-2 mt-2 space-y-1">
+                                    <ul  className="-mx-2 mt-2 space-y-1">
                                         {teams.map((team) => (
                                             <li key={team.name}>
                                                 <a
@@ -248,7 +248,7 @@ const SideNav = () => {
                                         ))}
                                     </ul>
                                 </li>
-                                <li className="mt-auto">
+                                {/* <li className="mt-auto">
                                     <a
                                         href="#"
                                         className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-orange-600"
@@ -259,7 +259,7 @@ const SideNav = () => {
                                         />
                                         Settings
                                     </a>
-                                </li>
+                                </li> */}
                             </ul>
                         </nav>
                     </div>

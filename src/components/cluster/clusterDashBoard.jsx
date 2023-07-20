@@ -24,7 +24,7 @@ export default function ClusterDashBoard() {
     
     const submitHandler = async () => {
         if (!isUpdating) {
-            const res = await CrmService.addCity(clusterSchema).then((response) => {
+            await CrmService.addCity(clusterSchema).then((response) => {
                 toast.success(response?.data?.status);
                 setClusterSchema("");
                 getData();
@@ -34,7 +34,7 @@ export default function ClusterDashBoard() {
                 toast.error(message);
             });
         } else {
-            const res = await CrmService.updateCity(clusterSchema).then((response) => {
+          await CrmService.updateCity(clusterSchema).then((response) => {
                 console.log()
                 toast.success(response?.data?.status);
                 setClusterSchema("");
@@ -90,7 +90,7 @@ export default function ClusterDashBoard() {
         })
     }
     const deleteHandler = async (data) => {
-        const res = await CrmService.updateCity(clusterSchema).then((response) => {
+        await CrmService.updateCity(clusterSchema).then((response) => {
             console.log()
             toast.success(response?.data?.status);
             setClusterSchema("");
@@ -228,6 +228,7 @@ export default function ClusterDashBoard() {
                                                 </span>
                                                 <span className="p-2">
                                                     <button
+                                                    onClick={()=>deleteHandler()}
                                                     >
                                                         <FontAwesomeIcon icon={faTrash} style={{ color: "#dc5709" }} />
                                                     </button>
