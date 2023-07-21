@@ -23,7 +23,7 @@ import ClusterDashBoard from '../cluster/clusterDashBoard'
 const navigation = [
     { name: 'Crm-Dashboard', href: '#', icon: HomeIcon, current: false },
     { name: 'City', href: '/city', icon: HomeIcon, current: true },
-    { name: 'Projects', href: '/cluster', icon: HomeIcon, current: false },
+    { name: 'Cluster', href: '/cluster', icon: HomeIcon, current: false },
     //   { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
     //   { name: 'Documents', href: '#', icon: DocumentDuplicateIcon, current: false },
     //   { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },

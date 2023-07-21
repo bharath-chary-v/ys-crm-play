@@ -32,7 +32,7 @@ console.log(clusterSchema,`clusterSchema`)
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6">
                 <div className="w-96  border-b border-gray-900/10 pb-12">
-                  <h2 className="text-base font-semibold leading-7 text-gray-900">Add City Information</h2>
+                  <h2 className="text-base font-semibold leading-7 text-gray-900">Add Cluster Information</h2>
 
 
                   <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">

@@ -24,7 +24,7 @@ export default function ClusterDashBoard() {
     
     const submitHandler = async () => {
         if (!isUpdating) {
-            await CrmService.addCity(clusterSchema).then((response) => {
+            await CrmService.addCluster(clusterSchema).then((response) => {
                 toast.success(response?.data?.status);
                 setClusterSchema("");
                 getData();
@@ -34,7 +34,7 @@ export default function ClusterDashBoard() {
                 toast.error(message);
             });
         } else {
-          await CrmService.updateCity(clusterSchema).then((response) => {
+          await CrmService.updateCluster(clusterSchema).then((response) => {
                 console.log()
                 toast.success(response?.data?.status);
                 setClusterSchema("");
@@ -77,7 +77,7 @@ export default function ClusterDashBoard() {
 
     };
     const addClusterHandler = () => {
-        alert("11")
+
         setOpen(true)
         setClusterSchema({
             id: "",
@@ -90,7 +90,7 @@ export default function ClusterDashBoard() {
         })
     }
     const deleteHandler = async (data) => {
-        await CrmService.updateCity(clusterSchema).then((response) => {
+        await CrmService.updateCluster(clusterSchema).then((response) => {
             console.log()
             toast.success(response?.data?.status);
             setClusterSchema("");
