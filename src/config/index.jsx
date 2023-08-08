@@ -15,6 +15,9 @@ class CONFIG {
                     addCluster: "crm_dashboard/v1/admin/clusters",
                     updateCluster: "crm_dashboard/v1/admin/clusters",
                 },
+                property:{
+                    getProperties:"crm_dashboard/v1/admin/properties"
+                }
             },
 
         }

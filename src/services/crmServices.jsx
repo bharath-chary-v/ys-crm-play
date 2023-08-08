@@ -49,6 +49,13 @@ class crmService {
             data
         });
     }
+    getProperties() {
+        return axios({
+            method: HTTP_METHODS.GET,
+            url: `${this.crmConfig.url}/${this.crmConfig.path.property.getProperties}`,
+
+        });
+    }
 
 
 }

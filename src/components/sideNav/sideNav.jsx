@@ -1,289 +1,165 @@
-
-import { Fragment, useState } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
-import {
-    Bars3Icon,
-    // BellIcon,
-    // CalendarIcon,
-    // ChartPieIcon,
-    // Cog6ToothIcon,
-    // DocumentDuplicateIcon,
-    // FolderIcon,
-    HomeIcon,
-    // UsersIcon,
-    XMarkIcon,
-} from '@heroicons/react/24/outline'
-// import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
-import CityDashBoard from '../city/cityDashBoard'
-import {  Route, Routes } from 'react-router-dom';
-import ClusterDashBoard from '../cluster/clusterDashBoard'
-
-
-
-const navigation = [
-    { name: 'Crm-Dashboard', href: '#', icon: HomeIcon, current: false },
-    { name: 'City', href: '/city', icon: HomeIcon, current: true },
-    { name: 'Cluster', href: '/cluster', icon: HomeIcon, current: false },
-    //   { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-    //   { name: 'Documents', href: '#', icon: DocumentDuplicateIcon, current: false },
-    //   { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },
-]
-const teams = [
-    //   { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
-    //   { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
-    //   { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
-]
-// const userNavigation = [
-//     { name: 'Your profile', href: '#' },
-//     { name: 'Sign out', href: '#' },
-// ]
-
-function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
-}
+import React, { useState } from "react";
+import { Link, Route, Routes, useLocation } from "react-router-dom";
+import PropertyDashBoard from "../property/propertyDashboard";
 
 const SideNav = () => {
-    const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const toggleMenu = () => {
+        setIsMenuOpen((prev) => !prev);
+    };
+
+    const location = useLocation();
+
+    const isActiveLink = (to) => {
+        return location.pathname.includes(to);
+      };
 
     return (
-        <>
+        <div className="relative flex flex-col md:flex-row md:h-screen">
+            {/* Menu Button */}
+            <button
+                className="fixed z-50 top-4 right-4 md:hidden p-2 rounded-md bg-gray-200"
+                onClick={toggleMenu}
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M4 6h16M4 12h16m-7 6h7"
+                    />
+                </svg>
+            </button>
 
-            <div>
-                <Transition.Root show={sidebarOpen} as={Fragment}>
-                    <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
-                        <Transition.Child
-                            as={Fragment}
-                            enter="transition-opacity ease-linear duration-300"
-                            enterFrom="opacity-0"
-                            enterTo="opacity-100"
-                            leave="transition-opacity ease-linear duration-300"
-                            leaveFrom="opacity-100"
-                            leaveTo="opacity-0"
+            {/* Side Navigation */}
+            <nav
+                className={`${isMenuOpen ? "block" : "hidden"
+                    } md:block md:static md:w-56 bg-teal-500 text-white border-r border-gray-300`}
+            // Add these styles
+            >
+                <div className="p-4">
+                    <div className="text-xl font-bold mb-2">Logged-in User</div>
+                    <div className="text-sm text-gray-500">Description</div>
+                </div>
+
+                <ul className="text-white flex-1 md:flex md:flex-col md:pb-16">
+                    <li className="px-4 py-3 mb-4 ml-4">
+                        <Link
+                            to="/"
+                            className={`block bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg shadow ${isActiveLink("/") ? " opacity-90" : " opacity-80 hover:opacity-90"
+                                }`}
                         >
-                            <div className="fixed inset-0 bg-gray-900/80" />
-                        </Transition.Child>
+                            + Dashboard
+                        </Link>
+                    </li>
+                    <li
+                        className={`px-4 py-3  ${isActiveLink("/properties") ? "bg-white text-teal-500" : ""
+                            }`}
+                    >
+                        <Link to="/properties" className="block font-semibold">
+                          + Properties
+                        </Link>
+                    </li>
+                    <li
+                        className={`px-4 py-3  ${isActiveLink("/Residents") ? "bg-white text-teal-500" : ""
+                            }`}
+                    >
+                        <Link to="/Residents" className="block font-semibold">
+                           + Residents
+                        </Link>
+                    </li>
+                    <li
+                        className={`px-4 py-3 ${isActiveLink("/Revenue") ? "bg-white text-teal-500" : ""
+                            }`}
+                    >
+                        <Link to="/Revenue" className="block font-semibold">
+                            + Revenue
+                        </Link>
+                    </li>
+                    <li
+                        className={`px-4 py-3 ${isActiveLink("/Services") ? "bg-white text-teal-500" : ""
+                            }`}
+                    >
+                        <Link to="/Services" className="block font-semibold">
+                            + Services
+                        </Link>
+                    </li>
+                    <li
+                        className={`px-4 py-3 ${isActiveLink("/Leads") ? "bg-white text-teal-500" : ""
+                            }`}
+                    >
+                        <Link to="/Leads" className="block font-semibold">
+                            + Leads
+                        </Link>
+                    </li>
+                    <li
+                        className={`px-4 py-3 ${isActiveLink("/Tickets") ? "bg-white text-teal-500" : ""
+                            }`}
+                    >
+                        <Link to="/Tickets" className="block font-semibold">
+                            + Tickets
+                        </Link>
+                    </li>
+                    <li
+                        className={`px-4 py-3 ${isActiveLink("/Food") ? "bg-white text-teal-500" : ""
+                            }`}
+                    >
+                        <Link to="/Food" className="block font-semibold">
+                            + Food
+                        </Link>
+                    </li>
+                    <li
+                        className={`px-4 py-3 ${isActiveLink("/Engagement") ? "bg-white text-teal-500" : ""
+                            }`}
+                    >
+                        <Link to="/Engagement" className="block font-semibold">
+                            + Engagement
+                        </Link>
+                    </li>
+                    <li
+                        className={`px-4 py-3 ${isActiveLink("/Engagement") ? "bg-white text-teal-500" : ""
+                            }`}
+                    >
+                        <Link to="/Ops" className="block font-semibold">
+                            + Engagement
+                        </Link>
+                    </li>
+                    <li
+                        className={`px-4 py-3 ${isActiveLink("/masters") ? "bg-white text-teal-500" : ""
+                            }`}
+                    >
+                        <Link to="/masters" className="block font-semibold">
+                           + Masters
+                        </Link>
+                    </li>
 
-                        <div className="fixed inset-0 flex">
-                            <Transition.Child
-                                as={Fragment}
-                                enter="transition ease-in-out duration-300 transform"
-                                enterFrom="-translate-x-full"
-                                enterTo="translate-x-0"
-                                leave="transition ease-in-out duration-300 transform"
-                                leaveFrom="translate-x-0"
-                                leaveTo="-translate-x-full"
-                            >
-                                <Dialog.Panel className="relative mr-16 flex w-full max-w-xs flex-1">
-                                    <Transition.Child
-                                        as={Fragment}
-                                        enter="ease-in-out duration-300"
-                                        enterFrom="opacity-0"
-                                        enterTo="opacity-100"
-                                        leave="ease-in-out duration-300"
-                                        leaveFrom="opacity-100"
-                                        leaveTo="opacity-0"
-                                    >
-                                        <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
-                                            <button type="button" className="-m-2.5 p-2.5" onClick={() => setSidebarOpen(false)}>
-                                                <span className="sr-only">Close sidebar</span>
-                                                <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
-                                            </button>
-                                        </div>
-                                    </Transition.Child>
-                                    {/* Sidebar component, swap this element with another sidebar if you like */}
-                                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
+                    {/* Add other nav links with the same pattern */}
+                </ul>
 
-                                        <div className="flex h-16 shrink-0 items-center">
-                                            <img
-                                                className="h-8 w-auto"
-                                                src="https://www.your-space.in/wp-content/themes/online-courses/images/logo.png"
-                                                alt="Your Company"
-                                            />
-                                        </div>
-                                        <nav className="flex flex-1 flex-col">
-                                            <ul  className="flex flex-1 flex-col gap-y-7">
-                                                <li>
-                                                    <ul  className="-mx-2 space-y-1">
-                                                        {navigation.map((item) => (
-                                                            <li key={item.name}>
-                                                                <a
-                                                                    href={item.href}
-                                                                    className={classNames(
-                                                                        item.current
-                                                                            ? 'bg-orange-50 text-orange-600'
-                                                                            : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50',
-                                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                                                    )}
-                                                                >
-                                                                    {/* <item.icon
-                                                                        className={classNames(
-                                                                            item.current ? 'text-orange-600' : 'text-gray-400 group-hover:text-orange-600',
-                                                                            'h-6 w-6 shrink-0'
-                                                                        )}
-                                                                        aria-hidden="true"
-                                                                    /> */}
-                                                                    {item.name}
-                                                                </a>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </li>
-                                                <li>
-                                                    <div className="text-xs font-semibold leading-6 text-gray-400">Your teams</div>
-                                                    <ul  className="-mx-2 mt-2 space-y-1">
-                                                        {teams.map((team) => (
-                                                            <li key={team.name}>
-                                                                <a
-                                                                    href={team.href}
-                                                                    className={classNames(
-                                                                        team.current
-                                                                            ? 'bg-gray-50 text-orange-600'
-                                                                            : 'text-gray-700 hover:text-orange-600 hover:bg-gray-50',
-                                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                                                    )}
-                                                                >
-                                                                    <span
-                                                                        className={classNames(
-                                                                            team.current
-                                                                                ? 'text-orange-600 border-indigo-600'
-                                                                                : 'text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-orange-600',
-                                                                            'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white'
-                                                                        )}
-                                                                    >
-                                                                        {team.initial}
-                                                                    </span>
-                                                                    <span className="truncate">{team.name}</span>
-                                                                </a>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </li>
-                                                {/* <li className="mt-auto">
-                                                    <a
-                                                        href="#"
-                                                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-orange-600"
-                                                    >
-                                                        <Cog6ToothIcon
-                                                            className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-orange-600"
-                                                            aria-hidden="true"
-                                                        />
-                                                        Settings
-                                                    </a>
-                                                </li> */}
-                                            </ul>
-                                        </nav>
-                                    </div>
-                                </Dialog.Panel>
-                            </Transition.Child>
-                        </div>
-                    </Dialog>
-                </Transition.Root>
+                {/* My Account */}
+                <div className="p-4 md:absolute md:bottom-0 md:left-0 w-full border-t border-gray-300 md:hidden bg-white">
+                    <Link
+                        to="/properties"
+                        className={`block ${isActiveLink("/properties") ? "bg-white text-teal-500 font-semibold" : ""
+                            }`}
+                    >
+                        Properties
+                    </Link>
 
-                {/* Static sidebar for desktop */}
-                <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-                    {/* Sidebar component, swap this element with another sidebar if you like */}
-                    <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
-                        <div className="flex h-16 shrink-0 items-center">
-                            <img
-                                className="h-8 w-auto"
-                                src="https://www.your-space.in/wp-content/themes/online-courses/images/logo.png"
-                                alt="Your Company"
-                            />
-                        </div>
-                        <nav className="flex flex-1 flex-col">
-                            <ul  className="flex flex-1 flex-col gap-y-5">
-                                <li>
-                                    <ul  className="-mx-2 space-y-1">
-                                        {navigation.map((item) => (
-                                            <li key={item.name}>
-                                                <a
-                                                    href={item.href}
-                                                    className={classNames(
-                                                        item.current
-                                                            ? 'bg-gray-50 text-orange-600'
-                                                            : 'text-gray-700 hover:text-orange-600 hover:bg-gray-50',
-                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                                    )}
-                                                >
-                                                    {/* <item.icon
-                                                        className={classNames(
-                                                            item.current ? 'text-orange-600' : 'text-gray-400 group-hover:text-orange-600',
-                                                            'h-6 w-6 shrink-0'
-                                                        )}
-                                                        aria-hidden="true"
-                                                    /> */}
-                                                    {item.name}
-                                                </a>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </li>
-                                <li>
-                                    {/* <div className="text-xs font-semibold leading-6 text-gray-400">Your teams</div> */}
-                                    <ul  className="-mx-2 mt-2 space-y-1">
-                                        {teams.map((team) => (
-                                            <li key={team.name}>
-                                                <a
-                                                    href={team.href}
-                                                    className={classNames(
-                                                        team.current
-                                                            ? 'bg-gray-50 text-orange-600'
-                                                            : 'text-gray-700 hover:text-orange-600 hover:bg-gray-50',
-                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                                    )}
-                                                >
-                                                    <span
-                                                        className={classNames(
-                                                            team.current
-                                                                ? 'text-orange-600 border-indigo-600'
-                                                                : 'text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-orange-600',
-                                                            'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white'
-                                                        )}
-                                                    >
-                                                        {team.initial}
-                                                    </span>
-                                                    <span className="truncate">{team.name}</span>
-                                                </a>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </li>
-                                {/* <li className="mt-auto">
-                                    <a
-                                        href="#"
-                                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-orange-600"
-                                    >
-                                        <Cog6ToothIcon
-                                            className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-orange-600"
-                                            aria-hidden="true"
-                                        />
-                                        Settings
-                                    </a>
-                                </li> */}
-                            </ul>
-                        </nav>
-                    </div>
                 </div>
+            </nav>
 
-                <div className="lg:pl-72">
+            {/* Main Content */}
 
-                    <button type="button" className="-m-2.5 p-2.5 text-gray-700 lg:hidden" onClick={() => setSidebarOpen(true)}>
-                        <span className="sr-only">Open sidebar</span>
-                        <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-                    </button>
+        </div>
+    );
+};
 
-                    {/* Separator */}
-                    <main >
-                        
-                            <Routes>
-                                <Route path="/city" element={<CityDashBoard />} />
-                                <Route path="/cluster" element={<ClusterDashBoard />} />
-                                {/* Add more routes here if needed */}
-                            </Routes>
-                    </main>
-                </div>
-            </div>
-        </>
-    )
-}
 export default SideNav;
