@@ -10,26 +10,26 @@ function classNames(...classes) {
 
 
 
-export default function AddCluster({ open, setOpen, clusterSchema, setClusterSchema, submitHandler }) {
+export default function AddInstitute({ open, setOpen, instititionSchema, setInstititionSchema, submitHandler }) {
 
   const [query, setQuery] = useState('')
   const [selectedPerson, setSelectedPerson] = useState(null)
-  const [city, setCity] = useState([])
+  const [cluster, setCluster] = useState([])
 
 
-  console.log(selectedPerson, `selectedPerson`)
-const getData = async () => {
-  const res = await CrmService.getCity()
-  console.log(res?.data?.data, `getData`)
-  setCity(res?.data?.data)
-}
-  const selectedCity = city.find(city => city.id === clusterSchema.city_id);
+  console.log(instititionSchema, `selectedPerson`)
+  const getData = async () => {
+    const res = await CrmService.getCluster()
+    console.log(res?.data?.data, `getData`)
+    setCluster(res?.data?.data)
+  }
+  const selectedCluster = cluster.find(city => city.id === instititionSchema.cluster_id);
 
   const filteredCity =
     query === ''
-      ? city
-      : city.filter((city) => {
-        return city.city_name.toLowerCase().includes(query.toLowerCase())
+      ? cluster
+      : cluster.filter((city) => {
+        return cluster.cluster_name.toLowerCase().includes(query.toLowerCase())
       })
   useEffect(() => {
     getData()
@@ -37,7 +37,7 @@ const getData = async () => {
 
   const handleCityChange = (cityId) => {
     console.log(cityId,`cityIdcityId`)
-    setClusterSchema({ ...clusterSchema, city_id: cityId });
+    setInstititionSchema({ ...instititionSchema, cluster_id: cityId });
   };
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -67,21 +67,21 @@ const getData = async () => {
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6">
                 <div className="w-96  border-b border-gray-900/10 pb-12">
-                  <h2 className="text-base font-semibold leading-7 text-gray-900">Add Cluster Information</h2>
+                  <h2 className="text-base font-semibold leading-7 text-gray-900">Add Institute Information</h2>
 
 
                   <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                     <div className="sm:col-span-3">
                       <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
-                        Cluster name
+                        Name
                       </label>
                       <div className="mt-2">
                         <input
                           type="text"
                           name="cluster_name"
                           id="cluster_name"
-                          value={clusterSchema.cluster_name} // Make sure to bind the input value to the city_name property
-                          onChange={(e) => setClusterSchema({ ...clusterSchema, cluster_name: e.target.value })}
+                          value={instititionSchema.name} // Make sure to bind the input value to the city_name property
+                          onChange={(e) => setInstititionSchema({ ...instititionSchema, name: e.target.value })}
                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
                         />
                       </div>
@@ -90,30 +90,16 @@ const getData = async () => {
 
 
 
+                  
                     <div className="col-span-full">
-                      <label htmlFor="street-address" className="block text-sm font-medium leading-6 text-gray-900">
-                        Description
-                      </label>
-                      <div className="mt-2">
-                        <input
-                          type="text"
-                          name="description"
-                          id="description"
-                          value={clusterSchema.description} // Make sure to bind the input value to the city_name property
-                          onChange={(e) => setClusterSchema({ ...clusterSchema, description: e.target.value })}
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-span-full">
-                    <Combobox as="div" value={clusterSchema.city_id} onChange={handleCityChange}>
-                        <Combobox.Label className="block text-sm font-medium leading-6 text-gray-900">City</Combobox.Label>
+                    <Combobox as="div" value={instititionSchema.cluster_id} onChange={handleCityChange}>
+                        <Combobox.Label className="block text-sm font-medium leading-6 text-gray-900">Cluster</Combobox.Label>
                         <div className="relative mt-2">
                           <Combobox.Input
                             className="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             onChange={(event) => setQuery(event.target.value)}
-                            value={selectedCity ? selectedCity.city_name : ''}
-                            displayValue={(cityId) => cityId}
+                            value={selectedCluster ? selectedCluster?.cluster_name : ''}
+                            displayValue={(clusterId) => clusterId}
                           />
                           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
                             <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -134,7 +120,7 @@ const getData = async () => {
                                 >
                                   {({ active, selected }) => (
                                     <>
-                                      <span className={classNames('block truncate', selected && 'font-semibold')}>{city?.city_name}</span>
+                                      <span className={classNames('block truncate', selected && 'font-semibold')}>{city?.cluster_name}</span>
 
                                       {selected && (
                                         <span
@@ -155,54 +141,11 @@ const getData = async () => {
                         </div>
                       </Combobox>
                     </div>
-                    <div className="col-span-full">
-                      <label htmlFor="street-address" className="block text-sm font-medium leading-6 text-gray-900">
-                        Pincode
-                      </label>
-                      <div className="mt-2">
-                        <input
-                          type="number"
-                          name="state"
-                          id="state"
-                          value={clusterSchema.pin_code
-                          } // Make sure to bind the input value to the city_name property
-                          onChange={(e) => setClusterSchema({ ...clusterSchema, pincode: e.target.value })}
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
-                        />
-                      </div>
-                    </div>
+                   
 
-                    <div className="sm:col-span-2 sm:col-start-1">
-                      <div className="p-1 ">
-                        <input
-                          type="checkbox"
-                          checked={clusterSchema.is_active} // Make sure to bind the input value to the city_name property
-                          onChange={(e) => setClusterSchema({ ...clusterSchema, is_active: e.target.checked })}
-                        />
-                        <span className="text-md ml-2 text-gray-9 00">
-                          - Is Active{" "}
-                        </span>
-                      </div>
-                    </div>
+                   
 
 
-                    {/* <div className="sm:col-span-3">
-                      <label htmlFor="country" className="block text-sm font-medium leading-6 text-gray-900">
-                        Country
-                      </label>
-                      <div className="mt-2">
-                        <select
-                          id="country"
-                          name="country"
-                          autoComplete="country-name"
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                        >
-                          <option>United States</option>
-                          <option>Canada</option>
-                          <option>Mexico</option>
-                        </select>
-                      </div>
-                    </div> */}
                   </div>
                   <button
                     type="button"

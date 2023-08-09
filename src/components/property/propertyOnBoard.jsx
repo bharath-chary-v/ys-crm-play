@@ -14,6 +14,40 @@ export default function PropertyOnBoard() {
     const operationsRef = useRef(null);
 
     const [activeComponent, setActiveComponent] = useState("basicDetails");
+    const [formData, setFormData] = useState({
+        name: '',
+        code: '',
+        state: '',
+        city: '',
+        cluster: '',
+        postalAddress1: '',
+        postalAddress2: '',
+        pincode: '',
+        latitude: '',
+        longitude: '',
+        capacity: '',
+        property_slug: "",
+        property_owner_id: null,
+        starting_price: 0,
+        gender_allowed: "",
+        seo_title: "",
+        seo_description: "",
+        seo_content: "",
+        seo_keywords: "",
+        location: "",
+        region: "",
+        google_map_link: "",
+        is_verified: false,
+        is_active: false,
+        is_deleted: false,
+        booking_charges: 0,
+        security_deposit:0,
+        web_view_link: "",
+        invoice_series: "",
+        display_title: "",
+        display_subtitle: "",
+        is_available: ""
+    });
 
     const getData = async () => {
         const res = await CrmService.getProperties();
@@ -58,7 +92,7 @@ export default function PropertyOnBoard() {
             <div className="bg-white p-4 text-black flex items-center justify-between sticky top-0 left-0 w-full z-10">
                 <div className="flex flex-col">
 
-                    <p className="text-sm">Property ABC <span></span>- XYZ123</p>
+                    <p className="text-sm">{formData?.name} <span></span>- XYZ123</p>
                     {/* <p className="text-sm"></p> */}
                 </div>
                 {/* Add any other content you want on the right side */}
@@ -99,19 +133,19 @@ export default function PropertyOnBoard() {
 
             <div className="pt-2 bg-slate-100 px-4 sm:px-6 lg:px-8">
                 <div className="mt-6" ref={basicDetailsRef} id="basicDetails">
-                    <BasicDetails scrollToComponent={scrollToComponent} />
+                    <BasicDetails scrollToComponent={scrollToComponent} formData={formData} setFormData={setFormData}/>
                 </div>
                 <div ref={bookingPlansRef} id="bookingPlans">
-                    <BookingPlans />
+                    <BookingPlans  formData={formData} setFormData={setFormData}/>
                 </div>
                 <div ref={propertyOwnerRef} id="propertyOwner">
-                    <PropertyOwner />
+                    <PropertyOwner  formData={formData} setFormData={setFormData}/>
                 </div>
                 <div ref={websiteListingRef} id="websiteListing">
-                    <WebsiteListing />
+                    <WebsiteListing  formData={formData} setFormData={setFormData}/>
                 </div>
                 <div ref={operationsRef} id="operations">
-                    <Operations />
+                    <Operations  formData={formData} setFormData={setFormData}/>
                 </div>
                 
             </div>

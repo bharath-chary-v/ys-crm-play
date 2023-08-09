@@ -1,32 +1,29 @@
 
 import { useEffect, useState } from "react"
 import CrmService from "../../services/crmServices"
-import AddCluster from "./addCluster"
+import AddDirectService from "./addDirectService"
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Fuse from "fuse.js";
 
-export default function ClusterDashBoard() {
-    const [cluster, setCluster] = useState([])
-    const [clusterFilter, setClusterFilter] = useState([])
+export default function DirectServicesDashboard() {
+    const [directService, setDirectService] = useState([])
+    const [directServiceFilter, setDirectServiceFilter] = useState([])
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
-    const [clusterSchema, setClusterSchema] = useState({
-        cluster_name: "",
-        description: "",
-        city_id: "",
-        pin_code: 12345,
-        is_active: true,
-        meta: {}
+    const [directServiceSchema, setDirectServiceSchema] = useState({
+        id: "",
+        name: "",
+        cluster_id: "",
     })
 
 
     const submitHandler = async () => {
         if (!isUpdating) {
-            await CrmService.addCluster(clusterSchema).then((response) => {
+            await CrmService.addDirectService(directServiceSchema).then((response) => {
                 toast.success(response?.data?.status);
-                setClusterSchema("");
+                setDirectServiceSchema("");
                 getData();
                 setOpen(false)
             }).catch((err) => {
@@ -34,10 +31,11 @@ export default function ClusterDashBoard() {
                 toast.error(message);
             });
         } else {
-            await CrmService.updateCluster(clusterSchema).then((response) => {
+            console.log(directServiceSchema, `directServiceSchema`)
+            await CrmService.updateDirectService(directServiceSchema).then((response) => {
                 console.log()
                 toast.success(response?.data?.status);
-                setClusterSchema("");
+                setDirectServiceSchema("");
                 getData();
                 setOpen(false)
             }).catch((err) => {
@@ -49,14 +47,11 @@ export default function ClusterDashBoard() {
     }
     const editHandler = async (res) => {
         console.log(res, `12342`)
-        setClusterSchema({
-            ...clusterSchema,
+        setDirectServiceSchema({
+            ...directServiceSchema,
             id: res?.id,
-            cluster_name: res?.cluster_name,
-            description: res?.description,
-            pin_code: res?.pin_code,
-            is_active: res?.is_active,
-            city_id:res?.city_id
+            name: res?.name,
+            cluster_id: res?.cluster_id,
 
         })
         setOpen(true)
@@ -65,35 +60,31 @@ export default function ClusterDashBoard() {
     }
     const searchFilter = (e) => {
         if (e.target.value.length >= 3) {
-            const usingFuse = new Fuse(clusterFilter, {
+            const usingFuse = new Fuse(directServiceFilter, {
                 keys: ["city_name", "state"],
             });
             let result = usingFuse.search(`^${e.target.value}`).map((search) => search.item);
 
-            setCluster(result)
+            setDirectService(result)
         } else {
-            setCluster(clusterFilter)
+            setDirectService(directServiceFilter)
         }
 
     };
-    const addClusterHandler = () => {
+    const addInstituteHandler = () => {
 
         setOpen(true)
-        setClusterSchema({
+        setDirectServiceSchema({
             id: "",
-            city_id: "",
-            description: "",
-            state: "",
-            gstin: "",
-            is_active: false,
-            meta: {}
+            name: "",
+            cluster_id: "",
         })
     }
     const deleteHandler = async (data) => {
-        await CrmService.updateCluster(clusterSchema).then((response) => {
+        await CrmService.updateDirectService(directServiceSchema).then((response) => {
             console.log()
             toast.success(response?.data?.status);
-            setClusterSchema("");
+            setDirectServiceSchema("");
             getData();
             setOpen(false)
         }).catch((err) => {
@@ -104,20 +95,17 @@ export default function ClusterDashBoard() {
     }
 
     const getData = async () => {
-        const res = await CrmService.getCluster()
-        console.log(res?.data?.data, `getData`)
-        setCluster(res?.data?.data)
-        setClusterFilter(res?.data?.data)
+        const res = await CrmService?.getDirectServices()
+        console.log(res?.data?.data, `getDirectServices`)
+        setDirectService(res?.data?.data)
+        setDirectServiceFilter(res?.data?.data)
     }
     useEffect(() => {
         getData()
-        setClusterSchema({
-            cluster_name: "",
-            description: "",
-            city_id: "",
-            pin_code: 12345,
-            is_active: true,
-            meta: {}
+        setDirectServiceSchema({
+            id: "",
+            name: "",
+            cluster_id: "",
         })
     }, [])
 
@@ -128,7 +116,7 @@ export default function ClusterDashBoard() {
                 <div class="sm:flex gap-4">
                     <div class="sm:flex mr-12">
                         <p class="text-3xl font-semibold text-orange-500">
-                            Clusters
+                            Services
                         </p>
                     </div>
                     <div class="sm:flex-auto">
@@ -167,10 +155,10 @@ export default function ClusterDashBoard() {
 
                     <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
                         <button
-                            onClick={() => addClusterHandler()}
+                            onClick={() => addInstituteHandler()}
                             className=" rounded-md bg-orange-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
                         >
-                            Add Cluster
+                            Add Service
                         </button>
                     </div>
                 </div>
@@ -184,40 +172,38 @@ export default function ClusterDashBoard() {
                                             S. No
                                         </th>
                                         <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
-                                            Cluster Name
+                                            Service Name
                                         </th>
                                         <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            Cluster Code
+                                            description
                                         </th>
                                         <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            Cluster Slug
+                                            category
                                         </th>
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            Description
+                                        <th scope="co   l" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                            Base Amount
                                         </th>
 
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            property Count
-                                        </th>
                                         <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                                             Actions
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    {cluster?.map((res, idx) => (
+                                    {directService?.map((res, idx) => (
                                         <tr key={res?.id}>
                                             <td className="whitespace-nowrap text-left  pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                                                 {idx + 1}
                                             </td>
                                             <td className="whitespace-nowrap text-left  pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                                                {res?.cluster_name}
+                                                {res?.name}
                                             </td>
-                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.cluster_code}</td>
-                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.cluster_slug}</td>
                                             <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.description}</td>
+                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.category}</td>
 
-                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.property_count}</td>
+                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.base_amount}</td>
+
+
                                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-left text-sm font-medium sm:pr-0">
                                                 <span className="p-2">
                                                     <button onClick={() => editHandler(res)} className="text-orange-600 hover:text-orange-900">
@@ -240,11 +226,11 @@ export default function ClusterDashBoard() {
                     </div>
                 </div>
             </div>
-            <AddCluster
+            <AddDirectService
                 open={open}
                 setOpen={setOpen}
-                clusterSchema={clusterSchema}
-                setClusterSchema={setClusterSchema}
+                directServiceSchema={directServiceSchema}
+                setDirectServiceSchema={setDirectServiceSchema}
                 submitHandler={submitHandler}
             />
         </>

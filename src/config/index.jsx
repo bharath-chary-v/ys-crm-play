@@ -15,8 +15,44 @@ class CONFIG {
                     addCluster: "crm_dashboard/v1/admin/clusters",
                     updateCluster: "crm_dashboard/v1/admin/clusters",
                 },
+                state: {
+                    getState: "crm_dashboard/v1/admin/states",
+                    addState: "crm_dashboard/v1/admin/states",
+                    getStateDetails: "crm_dashboard/v1/admin/states",
+                },
+                institutes: {
+                    getInstitutes: "crm_dashboard/v1/admin/institutions",
+                    addInstitutes: "crm_dashboard/v1/admin/institutions",
+                    updateInstitutes: "crm_dashboard/v1/admin/institutions",
+                    getInstitutesDetails: "crm_dashboard/v1/admin/institutions",
+                },
+                nearBy:{
+                    getNearBy: "crm_dashboard/v1/admin/nearby_places",
+                    addNearBy: "crm_dashboard/v1/admin/nearby_places",
+                    updateNearBy: "crm_dashboard/v1/admin/nearby_places",
+                    getNearByDetails: "crm_dashboard/v1/admin/nearby_places",     
+                },
+                roomType:{
+                    getRoomType: "crm_dashboard/v1/admin/room_types",
+                    addRoomType: "crm_dashboard/v1/admin/room_types",
+                    updateRoomType: "crm_dashboard/v1/admin/room_types",
+                    getRoomTypeDetails: "crm_dashboard/v1/admin/room_types",     
+                },
+                paymentPlan:{
+                    getPaymentPlan: "crm_dashboard/v1/admin/payment_plans",
+                    addPaymentPlan: "crm_dashboard/v1/admin/payment_plans",
+                    updatePaymentPlan: "crm_dashboard/v1/admin/payment_plans",
+                    getPaymentPlanDetails: "crm_dashboard/v1/admin/payment_plans",     
+                },
+                directServices:{
+                    getDirectService: "crm_dashboard/v1/admin/direct_services",
+                    addDirectService: "crm_dashboard/v1/admin/direct_services",
+                    updateDirectService: "crm_dashboard/v1/admin/direct_services",
+                    getDirectServiceDetails: "crm_dashboard/v1/admin/direct_services",     
+                },
                 property:{
-                    getProperties:"crm_dashboard/v1/admin/properties"
+                    getProperties:"crm_dashboard/v1/admin/properties",
+                    addProperties:"crm_dashboard/v1/admin/properties"
                 }
             },
 

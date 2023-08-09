@@ -1,66 +1,90 @@
 // src/components/BasicInfo.js
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useRef } from 'react';
 import CrmService from '../../services/crmServices';
 
-const BasicDetails = ({scrollToComponent}) => {
-    const [cities, setCities] = useState([])
-    const [clusters, setClusters] = useState([])
-    const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+const BasicDetails = ({ scrollToComponent,formData, setFormData }) => {
+    const bookingPlansRef = useRef(null);
+    const [cities, setCities] = useState([]);
+    const [states, setStates] = useState([]);
+    const [clusters, setClusters] = useState([]);
+    
 
-    const [formData, setFormData] = useState({
-        name: '',
-        code: '',
-        state: '',
-        city: '',
-        cluster: '',
-        postalAddress1: '',
-        postalAddress2: '',
-        pincode: '',
-        latitude: '',
-        longitude: '',
-        capacity: '',
-    });
     useEffect(() => {
-        // Fetch cities data when the component mounts
         getCityData();
-        getClusterData()
+        getClusterData();
+        getStateData();
+    }, []);
 
-    }, [])
     const getCityData = async () => {
         try {
-
             const cityData = await CrmService.getCity();
-
-            setCities(cityData?.data?.data); // Update the cities state with the fetched data
+            setCities(cityData?.data?.data);
         } catch (error) {
             console.error('Error while fetching city data:', error);
-            // Handle the error, show a message, etc.
         }
     };
+
+    const getStateData = async () => {
+        try {
+            const stateData = await CrmService.getState();
+            setStates(stateData?.data?.data);
+        } catch (error) {
+            console.error('Error while fetching state data:', error);
+        }
+    };
+
     const getClusterData = async () => {
         try {
-
             const clusterData = await CrmService.getCluster();
-
-            setClusters(clusterData?.data?.data); // Update the cities state with the fetched data
+            setClusters(clusterData?.data?.data);
         } catch (error) {
-            console.error('Error while fetching city data:', error);
-            // Handle the error, show a message, etc.
+            console.error('Error while fetching cluster data:', error);
         }
     };
-    const handleChange = (e) => {
 
+    const handleChange = (e) => {
         const { id, value } = e.target;
         setFormData((prevFormData) => ({ ...prevFormData, [id]: value }));
     };
-    const handleSaveAndNext = async () => {
-        let bookingPlansRef
-        scrollToComponent(bookingPlansRef)
-       
-      };
 
-      
+    const handleDropdownChange = (id, selectedValue) => {
+        setFormData((prevFormData) => ({ ...prevFormData, [id]: selectedValue }));
+    };
+
+   
+    
+
+    const handleSaveAndNext = async () => {
+        if (bookingPlansRef.current) {
+            
+            scrollToComponent(bookingPlansRef.current);
+        }
+    };
+
+    const addProperty = async () => {
+        const facilitySchema = {
+            "property_name": formData?.name,
+            // "description": formData.description,  
+            "property_code": formData?.code,
+            "cluster_id": formData?.cluster,
+            "pincode": formData?.pincode,
+            "postal_address_1": formData?.postalAddress1,
+            "postal_address_2": formData?.postalAddress2,
+            "latitude": formData?.latitude,
+            "longitude": formData?.longitude,
+            "capacity": formData?.capacity,
+            "state":formData?.state
+        };
+        try {
+            console.log(facilitySchema,`facilitySchema`)
+            const response = await CrmService.addProperties(facilitySchema);
+            console.log("API response:", response);
+        } catch (error) {
+            console.error("API error:", error);
+        }
+    };
+
     return (
         <div className="bg-white p-4 rounded-md shadow-md pt-10 pb-32 mb-32">
             <h2 className="text-lg font-semibold mb-4 text-left">Basic Information</h2>
@@ -74,7 +98,7 @@ const BasicDetails = ({scrollToComponent}) => {
                         id="name"
                         className="mt-1 px-4 py-2 rounded-md border border-gray-300 focus:ring focus:ring-blue-200 focus:border-blue-500 bg-gray-100"
                         placeholder="Property Name"
-                        value={formData.name}
+                        value={formData?.name}
                         onChange={handleChange}
                     />
                 </div>
@@ -88,7 +112,7 @@ const BasicDetails = ({scrollToComponent}) => {
                         className="block w-full mt-1 px-4 py-2 rounded-md border border-gray-300 focus:ring focus:ring-blue-200 focus:border-blue-500 bg-gray-100"
                         placeholder="Code"
                         disabled={true}
-                        value={formData.code}
+                        value={formData?.code}
                         onChange={handleChange}
                     />
                 </div>
@@ -96,14 +120,20 @@ const BasicDetails = ({scrollToComponent}) => {
                     <label htmlFor="state" className="text-sm font-medium text-gray-700 text-left">
                         State
                     </label>
-                    <input
-                        type="text"
+                    <select
                         id="state"
+                        name="state"
                         className="block w-full mt-1 px-4 py-2 rounded-md border border-gray-300 focus:ring focus:ring-blue-200 focus:border-blue-500 bg-gray-100"
-                        placeholder="State"
-                        value={formData.state}
-                        onChange={handleChange}
-                    />
+                        value={formData?.state}
+                        onChange={(e) => handleDropdownChange("state", e.target.value)}
+                    >
+                        <option value="">Select a state</option>
+                        {states.map((state) => (
+                            <option key={state?.id} value={state?.id}>
+                                {state?.name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <div className='flex flex-col'>
                     <label htmlFor="city" className="text-sm font-medium text-gray-700 text-left">
@@ -113,13 +143,13 @@ const BasicDetails = ({scrollToComponent}) => {
                         id="city"
                         name="city"
                         className="block w-full mt-1 px-4 py-2 rounded-md border border-gray-300 focus:ring focus:ring-blue-200 focus:border-blue-500 bg-gray-100"
-                        value={formData.city}
-                        onChange={handleChange}
+                        value={formData?.city}
+                        onChange={(e) => handleDropdownChange("city", e.target.value)}
                     >
                         <option value="">Select a city</option>
                         {cities.map((city) => (
-                            <option key={city.id} value={city.id}>
-                                {city.city_name}
+                            <option key={city?.id} value={city?.id}>
+                                {city?.city_name}
                             </option>
                         ))}
                     </select>
@@ -129,16 +159,16 @@ const BasicDetails = ({scrollToComponent}) => {
                         Cluster
                     </label>
                     <select
-                        id="city"
-                        name="city"
+                        id="cluster"
+                        name="cluster"
                         className="block w-full mt-1 px-4 py-2 rounded-md border border-gray-300 focus:ring focus:ring-blue-200 focus:border-blue-500 bg-gray-100"
-                        value={formData.cluster}
-                        onChange={handleChange}
+                        value={formData?.cluster}
+                        onChange={(e) => handleDropdownChange("cluster", e.target.value)}
                     >
                         <option value="">Select a cluster</option>
                         {clusters.map((cluster) => (
-                            <option key={cluster.id} cluster={cluster.id}>
-                                {cluster.cluster_name}
+                            <option key={cluster?.id} value={cluster?.id}>
+                                {cluster?.cluster_name}
                             </option>
                         ))}
                     </select>
@@ -152,7 +182,7 @@ const BasicDetails = ({scrollToComponent}) => {
                         id="postalAddress1"
                         className="block w-full mt-1 px-4 py-2 rounded-md border border-gray-300 focus:ring focus:ring-blue-200 focus:border-blue-500 bg-gray-100"
                         placeholder="Postal Address 1"
-                        value={formData.postalAddress1}
+                        value={formData?.postalAddress1}
                         onChange={handleChange}
                     />
                 </div>
@@ -165,7 +195,7 @@ const BasicDetails = ({scrollToComponent}) => {
                         id="postalAddress2"
                         className="block w-full mt-1 px-4 py-2 rounded-md border border-gray-300 focus:ring focus:ring-blue-200 focus:border-blue-500 bg-gray-100"
                         placeholder="Postal Address 2"
-                        value={formData.postalAddress2}
+                        value={formData?.postalAddress2}
                         onChange={handleChange}
                     />
                 </div>
@@ -178,7 +208,7 @@ const BasicDetails = ({scrollToComponent}) => {
                         id="pincode"
                         className="block w-full mt-1 px-4 py-2 rounded-md border border-gray-300 focus:ring focus:ring-blue-200 focus:border-blue-500 bg-gray-100"
                         placeholder="Pincode"
-                        value={formData.pincode}
+                        value={formData?.pincode}
                         onChange={handleChange}
                     />
                 </div>
@@ -191,7 +221,7 @@ const BasicDetails = ({scrollToComponent}) => {
                         id="latitude"
                         className="block w-full mt-1 px-4 py-2 rounded-md border border-gray-300 focus:ring focus:ring-blue-200 focus:border-blue-500 bg-gray-100"
                         placeholder="Maps Latitude"
-                        value={formData.latitude}
+                        value={formData?.latitude}
                         onChange={handleChange}
                     />
                 </div>
@@ -204,7 +234,7 @@ const BasicDetails = ({scrollToComponent}) => {
                         id="longitude"
                         className="block w-full mt-1 px-4 py-2 rounded-md border border-gray-300 focus:ring focus:ring-blue-200 focus:border-blue-500 bg-gray-100"
                         placeholder="Maps Longitude"
-                        value={formData.longitude}
+                        value={formData?.longitude}
                         onChange={handleChange}
                     />
                 </div>
@@ -217,14 +247,16 @@ const BasicDetails = ({scrollToComponent}) => {
                         id="capacity"
                         className="block w-full mt-1 px-4 py-2 rounded-md border border-gray-300 focus:ring focus:ring-blue-200 focus:border-blue-500 bg-gray-100"
                         placeholder="Capacity"
-                        value={formData.capacity}
+                        value={formData?.capacity}
                         onChange={handleChange}
                     />
                 </div>
-            </div>
+
             <div>
-                <button onClick={handleSaveAndNext}>save & Next</button>
+                <button onClick={addProperty}>save & Next</button>
             </div>
+            </div>
+            
         </div>
     );
 };

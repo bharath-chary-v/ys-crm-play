@@ -10,21 +10,25 @@ function classNames(...classes) {
 
 
 
-export default function AddCluster({ open, setOpen, clusterSchema, setClusterSchema, submitHandler }) {
+export default function AddInstitute({ open, setOpen, nearBySchema, setNearBySchema, submitHandler }) {
 
   const [query, setQuery] = useState('')
-  const [selectedPerson, setSelectedPerson] = useState(null)
   const [city, setCity] = useState([])
 
 
-  console.log(selectedPerson, `selectedPerson`)
-const getData = async () => {
-  const res = await CrmService.getCity()
-  console.log(res?.data?.data, `getData`)
-  setCity(res?.data?.data)
-}
-  const selectedCity = city.find(city => city.id === clusterSchema.city_id);
+  const categories = [
+    { id: 1, name: 'facility' },
+    { id: 2, name: 'transport' },
+    { id: 3, name: 'hospital' },
 
+  ];
+  const getData = async () => {
+    const res = await CrmService?.getCity()
+    console.log(res?.data?.data, `getData`)
+    setCity(res?.data?.data)
+  }
+
+  const selectedCity = city.find(city => city.id === nearBySchema.city_id);
   const filteredCity =
     query === ''
       ? city
@@ -36,8 +40,8 @@ const getData = async () => {
   }, [])
 
   const handleCityChange = (cityId) => {
-    console.log(cityId,`cityIdcityId`)
-    setClusterSchema({ ...clusterSchema, city_id: cityId });
+    console.log(cityId, `cityIdcityId`)
+    setNearBySchema({ ...nearBySchema, city_id: cityId });
   };
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -67,52 +71,35 @@ const getData = async () => {
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6">
                 <div className="w-96  border-b border-gray-900/10 pb-12">
-                  <h2 className="text-base font-semibold leading-7 text-gray-900">Add Cluster Information</h2>
+                  <h2 className="text-base font-semibold leading-7 text-gray-900">Add Nearby Information</h2>
 
 
                   <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                     <div className="sm:col-span-3">
                       <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
-                        Cluster name
+                        Name
                       </label>
                       <div className="mt-2">
                         <input
                           type="text"
                           name="cluster_name"
                           id="cluster_name"
-                          value={clusterSchema.cluster_name} // Make sure to bind the input value to the city_name property
-                          onChange={(e) => setClusterSchema({ ...clusterSchema, cluster_name: e.target.value })}
+                          value={nearBySchema.name} // Make sure to bind the input value to the city_name property
+                          onChange={(e) => setNearBySchema({ ...nearBySchema, name: e.target.value })}
                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
                         />
                       </div>
                     </div>
 
 
-
-
                     <div className="col-span-full">
-                      <label htmlFor="street-address" className="block text-sm font-medium leading-6 text-gray-900">
-                        Description
-                      </label>
-                      <div className="mt-2">
-                        <input
-                          type="text"
-                          name="description"
-                          id="description"
-                          value={clusterSchema.description} // Make sure to bind the input value to the city_name property
-                          onChange={(e) => setClusterSchema({ ...clusterSchema, description: e.target.value })}
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-span-full">
-                    <Combobox as="div" value={clusterSchema.city_id} onChange={handleCityChange}>
+                      <Combobox as="div" value={nearBySchema.city_id} onChange={handleCityChange}>
                         <Combobox.Label className="block text-sm font-medium leading-6 text-gray-900">City</Combobox.Label>
                         <div className="relative mt-2">
                           <Combobox.Input
                             className="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             onChange={(event) => setQuery(event.target.value)}
-                            value={selectedCity ? selectedCity.city_name : ''}
+                            value={selectedCity ? selectedCity?.city_name : ''}
                             displayValue={(cityId) => cityId}
                           />
                           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
@@ -156,53 +143,46 @@ const getData = async () => {
                       </Combobox>
                     </div>
                     <div className="col-span-full">
-                      <label htmlFor="street-address" className="block text-sm font-medium leading-6 text-gray-900">
-                        Pincode
+                      <div className="w-64">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="category">
+                          Select Category:
+                        </label>
+                        <select
+                          id="category"
+                          className="block appearance-none w-full bg-white border border-gray-300 rounded-md py-2 px-3 leading-tight focus:outline-none focus:ring focus:border-blue-300"
+                          value={nearBySchema.category}
+                          onChange={(e) => setNearBySchema({ ...nearBySchema, category: e.target.value })}
+                        >
+                          <option value="">Select an option</option>
+                          {categories.map(category => (
+                            <option key={category.name} value={category.name}>
+                              {category.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+
+                    </div>
+                    <div className="sm:col-span-3">
+                      <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
+                        Icon Url
                       </label>
                       <div className="mt-2">
                         <input
-                          type="number"
-                          name="state"
-                          id="state"
-                          value={clusterSchema.pin_code
-                          } // Make sure to bind the input value to the city_name property
-                          onChange={(e) => setClusterSchema({ ...clusterSchema, pincode: e.target.value })}
+                          type="text"
+                          name="cluster_name"
+                          id="cluster_name"
+                          value={nearBySchema.icon_url} // Make sure to bind the input value to the city_name property
+                          onChange={(e) => setNearBySchema({ ...nearBySchema, icon_url: e.target.value })}
                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
                         />
                       </div>
                     </div>
 
-                    <div className="sm:col-span-2 sm:col-start-1">
-                      <div className="p-1 ">
-                        <input
-                          type="checkbox"
-                          checked={clusterSchema.is_active} // Make sure to bind the input value to the city_name property
-                          onChange={(e) => setClusterSchema({ ...clusterSchema, is_active: e.target.checked })}
-                        />
-                        <span className="text-md ml-2 text-gray-9 00">
-                          - Is Active{" "}
-                        </span>
-                      </div>
-                    </div>
 
 
-                    {/* <div className="sm:col-span-3">
-                      <label htmlFor="country" className="block text-sm font-medium leading-6 text-gray-900">
-                        Country
-                      </label>
-                      <div className="mt-2">
-                        <select
-                          id="country"
-                          name="country"
-                          autoComplete="country-name"
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                        >
-                          <option>United States</option>
-                          <option>Canada</option>
-                          <option>Mexico</option>
-                        </select>
-                      </div>
-                    </div> */}
+
                   </div>
                   <button
                     type="button"

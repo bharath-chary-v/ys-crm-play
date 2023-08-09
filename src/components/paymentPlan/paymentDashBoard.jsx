@@ -1,32 +1,38 @@
 
 import { useEffect, useState } from "react"
 import CrmService from "../../services/crmServices"
-import AddCluster from "./addCluster"
+import AddPaymentPlan from "./addPaymentPlan"
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Fuse from "fuse.js";
 
-export default function ClusterDashBoard() {
-    const [cluster, setCluster] = useState([])
-    const [clusterFilter, setClusterFilter] = useState([])
+export default function PaymentPlanDashBoard() {
+    const [paymentPlan, setPaymentPlan] = useState([])
+    const [paymentPlanFilter, setPaymentPlanFilter] = useState([])
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
-    const [clusterSchema, setClusterSchema] = useState({
-        cluster_name: "",
+    const [paymentPlanSchema, setPaymentPlanSchema] = useState({
+        id: "",
+        payment_plan_name: "",
+        payment_plan_type: "",
         description: "",
-        city_id: "",
-        pin_code: 12345,
-        is_active: true,
-        meta: {}
+        amount: 0,
+        duration_in_months: 0,
+        installment_frequency: "",
+        payment_method: "",
+        discount_percentage: 0,
+        is_active: false,
+        is_deleted: false,
+        is_default: false
     })
 
 
     const submitHandler = async () => {
         if (!isUpdating) {
-            await CrmService.addCluster(clusterSchema).then((response) => {
+            await CrmService.addPaymentPlan(paymentPlanSchema).then((response) => {
                 toast.success(response?.data?.status);
-                setClusterSchema("");
+                setPaymentPlanSchema("");
                 getData();
                 setOpen(false)
             }).catch((err) => {
@@ -34,10 +40,11 @@ export default function ClusterDashBoard() {
                 toast.error(message);
             });
         } else {
-            await CrmService.updateCluster(clusterSchema).then((response) => {
+
+            await CrmService.updatePaymentPlan(paymentPlanSchema).then((response) => {
                 console.log()
                 toast.success(response?.data?.status);
-                setClusterSchema("");
+                setPaymentPlanSchema("");
                 getData();
                 setOpen(false)
             }).catch((err) => {
@@ -49,51 +56,60 @@ export default function ClusterDashBoard() {
     }
     const editHandler = async (res) => {
         console.log(res, `12342`)
-        setClusterSchema({
-            ...clusterSchema,
+        setPaymentPlanSchema({
+            ...paymentPlanSchema,
             id: res?.id,
-            cluster_name: res?.cluster_name,
+            payment_plan_name: res?.payment_plan_name,
+            payment_plan_type: res?.payment_plan_type,
             description: res?.description,
-            pin_code: res?.pin_code,
+            amount: res?.amount,
+            duration_in_months: res?.duration_in_months,
+            installment_frequency: res?.installment_frequency,
+            payment_method: res?.payment_method,
+            discount_percentage: res?.discount_percentage,
             is_active: res?.is_active,
-            city_id:res?.city_id
-
+            is_deleted: res?.is_deleted,
+            is_default: res?.is_default
         })
         setOpen(true)
         setIsUpdating(true)
-
     }
     const searchFilter = (e) => {
         if (e.target.value.length >= 3) {
-            const usingFuse = new Fuse(clusterFilter, {
+            const usingFuse = new Fuse(paymentPlanFilter, {
                 keys: ["city_name", "state"],
             });
             let result = usingFuse.search(`^${e.target.value}`).map((search) => search.item);
 
-            setCluster(result)
+            setPaymentPlan(result)
         } else {
-            setCluster(clusterFilter)
+            setPaymentPlan(paymentPlanFilter)
         }
 
     };
-    const addClusterHandler = () => {
+    const addNearByHandler = () => {
 
         setOpen(true)
-        setClusterSchema({
+        setPaymentPlanSchema({
             id: "",
-            city_id: "",
+            payment_plan_name: "",
+            payment_plan_type: "",
             description: "",
-            state: "",
-            gstin: "",
+            amount: 0,
+            duration_in_months: 0,
+            installment_frequency: "",
+            payment_method: "",
+            discount_percentage: 0,
             is_active: false,
-            meta: {}
+            is_deleted: false,
+            is_default: false
         })
     }
     const deleteHandler = async (data) => {
-        await CrmService.updateCluster(clusterSchema).then((response) => {
+        await CrmService.updatePaymentPlan(paymentPlanSchema).then((response) => {
             console.log()
             toast.success(response?.data?.status);
-            setClusterSchema("");
+            setPaymentPlanSchema("");
             getData();
             setOpen(false)
         }).catch((err) => {
@@ -104,20 +120,26 @@ export default function ClusterDashBoard() {
     }
 
     const getData = async () => {
-        const res = await CrmService.getCluster()
-        console.log(res?.data?.data, `getData`)
-        setCluster(res?.data?.data)
-        setClusterFilter(res?.data?.data)
+        const res = await CrmService?.getPaymentPlans()
+        console.log(res?.data?.data, `getPaymentPlans`)
+        setPaymentPlan(res?.data?.data)
+        setPaymentPlanFilter(res?.data?.data)
     }
     useEffect(() => {
         getData()
-        setClusterSchema({
-            cluster_name: "",
+        setPaymentPlanSchema({
+            id: "",
+            payment_plan_name: "",
+            payment_plan_type: "",
             description: "",
-            city_id: "",
-            pin_code: 12345,
-            is_active: true,
-            meta: {}
+            amount: 0,
+            duration_in_months: 0,
+            installment_frequency: "",
+            payment_method: "",
+            discount_percentage: 0,
+            is_active: false,
+            is_deleted: false,
+            is_default: false
         })
     }, [])
 
@@ -128,7 +150,7 @@ export default function ClusterDashBoard() {
                 <div class="sm:flex gap-4">
                     <div class="sm:flex mr-12">
                         <p class="text-3xl font-semibold text-orange-500">
-                            Clusters
+                            Payment Plan
                         </p>
                     </div>
                     <div class="sm:flex-auto">
@@ -167,10 +189,10 @@ export default function ClusterDashBoard() {
 
                     <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
                         <button
-                            onClick={() => addClusterHandler()}
+                            onClick={() => addNearByHandler()}
                             className=" rounded-md bg-orange-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
                         >
-                            Add Cluster
+                            Add Payment Plan
                         </button>
                     </div>
                 </div>
@@ -180,44 +202,62 @@ export default function ClusterDashBoard() {
                             <table className=" min-w-full divide-y divide-gray-300">
                                 <thead>
                                     <tr>
-                                        <th scope="col" className=" py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                                        <th scope="col" className=" py-3.5 pl-4 pr-3 text-left  text-sm font-semibold text-gray-900 sm:pl-0">
                                             S. No
                                         </th>
                                         <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
-                                            Cluster Name
+                                            plan Name
                                         </th>
                                         <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            Cluster Code
-                                        </th>
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            Cluster Slug
+                                            plan Type
                                         </th>
                                         <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                                             Description
                                         </th>
-
                                         <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            property Count
+                                            Installment frequency
                                         </th>
+                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                            Payment Method
+                                        </th>
+                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                            Discount Percentage
+                                        </th>
+                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                            Active
+                                        </th>
+
                                         <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                                             Actions
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    {cluster?.map((res, idx) => (
+                                    {paymentPlan?.map((res, idx) => (
                                         <tr key={res?.id}>
                                             <td className="whitespace-nowrap text-left  pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                                                 {idx + 1}
                                             </td>
                                             <td className="whitespace-nowrap text-left  pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                                                {res?.cluster_name}
+                                                {res?.payment_plan_name}
                                             </td>
-                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.cluster_code}</td>
-                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.cluster_slug}</td>
-                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.description}</td>
+                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+                                                {res?.payment_plan_type}
+                                            </td>
+                                            <td className="whitespace-normal text-left px-3 py-4 text-sm text-gray-500">{res?.description}</td>
 
-                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.property_count}</td>
+                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+                                                {res?.installment_frequency}
+                                            </td>
+                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+                                                {res?.payment_method}
+                                            </td>
+                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+                                                {res?.discount_percentage}
+                                            </td>
+                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+                                                {res?.is_active ? "Yes" : "No"}
+                                            </td>
                                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-left text-sm font-medium sm:pr-0">
                                                 <span className="p-2">
                                                     <button onClick={() => editHandler(res)} className="text-orange-600 hover:text-orange-900">
@@ -240,11 +280,11 @@ export default function ClusterDashBoard() {
                     </div>
                 </div>
             </div>
-            <AddCluster
+            <AddPaymentPlan
                 open={open}
                 setOpen={setOpen}
-                clusterSchema={clusterSchema}
-                setClusterSchema={setClusterSchema}
+                paymentPlanSchema={paymentPlanSchema}
+                setPaymentPlanSchema={setPaymentPlanSchema}
                 submitHandler={submitHandler}
             />
         </>

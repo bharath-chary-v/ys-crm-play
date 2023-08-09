@@ -1,32 +1,29 @@
 
 import { useEffect, useState } from "react"
 import CrmService from "../../services/crmServices"
-import AddCluster from "./addCluster"
+import AddInstitute from "./addInstitution"
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Fuse from "fuse.js";
 
-export default function ClusterDashBoard() {
-    const [cluster, setCluster] = useState([])
-    const [clusterFilter, setClusterFilter] = useState([])
+export default function InstitutionDashBoard() {
+    const [institition, setInstitition] = useState([])
+    const [instititionFilter, setInstititionFilter] = useState([])
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
-    const [clusterSchema, setClusterSchema] = useState({
-        cluster_name: "",
-        description: "",
-        city_id: "",
-        pin_code: 12345,
-        is_active: true,
-        meta: {}
+    const [instititionSchema, setInstititionSchema] = useState({
+        id: "",
+        name: "",
+        cluster_id: "",
     })
 
 
     const submitHandler = async () => {
         if (!isUpdating) {
-            await CrmService.addCluster(clusterSchema).then((response) => {
+            await CrmService.addInstitute(instititionSchema).then((response) => {
                 toast.success(response?.data?.status);
-                setClusterSchema("");
+                setInstititionSchema("");
                 getData();
                 setOpen(false)
             }).catch((err) => {
@@ -34,10 +31,11 @@ export default function ClusterDashBoard() {
                 toast.error(message);
             });
         } else {
-            await CrmService.updateCluster(clusterSchema).then((response) => {
+            console.log(instititionSchema, `instititionSchema`)
+            await CrmService.updateInstitute(instititionSchema).then((response) => {
                 console.log()
                 toast.success(response?.data?.status);
-                setClusterSchema("");
+                setInstititionSchema("");
                 getData();
                 setOpen(false)
             }).catch((err) => {
@@ -49,14 +47,11 @@ export default function ClusterDashBoard() {
     }
     const editHandler = async (res) => {
         console.log(res, `12342`)
-        setClusterSchema({
-            ...clusterSchema,
+        setInstititionSchema({
+            ...instititionSchema,
             id: res?.id,
-            cluster_name: res?.cluster_name,
-            description: res?.description,
-            pin_code: res?.pin_code,
-            is_active: res?.is_active,
-            city_id:res?.city_id
+            name: res?.name,
+            cluster_id: res?.cluster_id,
 
         })
         setOpen(true)
@@ -65,35 +60,31 @@ export default function ClusterDashBoard() {
     }
     const searchFilter = (e) => {
         if (e.target.value.length >= 3) {
-            const usingFuse = new Fuse(clusterFilter, {
+            const usingFuse = new Fuse(instititionFilter, {
                 keys: ["city_name", "state"],
             });
             let result = usingFuse.search(`^${e.target.value}`).map((search) => search.item);
 
-            setCluster(result)
+            setInstitition(result)
         } else {
-            setCluster(clusterFilter)
+            setInstitition(instititionFilter)
         }
 
     };
-    const addClusterHandler = () => {
+    const addInstituteHandler = () => {
 
         setOpen(true)
-        setClusterSchema({
+        setInstititionSchema({
             id: "",
-            city_id: "",
-            description: "",
-            state: "",
-            gstin: "",
-            is_active: false,
-            meta: {}
+            name: "",
+            cluster_id: "",
         })
     }
     const deleteHandler = async (data) => {
-        await CrmService.updateCluster(clusterSchema).then((response) => {
+        await CrmService.updateCluster(instititionSchema).then((response) => {
             console.log()
             toast.success(response?.data?.status);
-            setClusterSchema("");
+            setInstititionSchema("");
             getData();
             setOpen(false)
         }).catch((err) => {
@@ -102,22 +93,24 @@ export default function ClusterDashBoard() {
         });
         setIsUpdating(false)
     }
+    const getCluster = async (clusterId) => {
+        const clusterData = await CrmService?.getCluster(); // Replace with your actual API call
+        console.log(clusterData?.data?.data, `getData`)
 
+        const cluster = clusterData?.data?.data.find(city => city?.id === clusterId);
+        return cluster ? cluster.cluster_name : 'N/A';
+    };
     const getData = async () => {
-        const res = await CrmService.getCluster()
-        console.log(res?.data?.data, `getData`)
-        setCluster(res?.data?.data)
-        setClusterFilter(res?.data?.data)
+        const res = await CrmService?.getInstitutes()
+        setInstitition(res?.data?.data)
+        setInstititionFilter(res?.data?.data)
     }
     useEffect(() => {
         getData()
-        setClusterSchema({
-            cluster_name: "",
-            description: "",
-            city_id: "",
-            pin_code: 12345,
-            is_active: true,
-            meta: {}
+        setInstititionSchema({
+            id: "",
+            name: "",
+            cluster_id: "", 
         })
     }, [])
 
@@ -128,7 +121,7 @@ export default function ClusterDashBoard() {
                 <div class="sm:flex gap-4">
                     <div class="sm:flex mr-12">
                         <p class="text-3xl font-semibold text-orange-500">
-                            Clusters
+                            Institution
                         </p>
                     </div>
                     <div class="sm:flex-auto">
@@ -167,10 +160,10 @@ export default function ClusterDashBoard() {
 
                     <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
                         <button
-                            onClick={() => addClusterHandler()}
+                            onClick={() => addInstituteHandler()}
                             className=" rounded-md bg-orange-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
                         >
-                            Add Cluster
+                            Add Institute
                         </button>
                     </div>
                 </div>
@@ -184,40 +177,28 @@ export default function ClusterDashBoard() {
                                             S. No
                                         </th>
                                         <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
-                                            Cluster Name
+                                            Institute Name
                                         </th>
                                         <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            Cluster Code
-                                        </th>
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            Cluster Slug
-                                        </th>
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            Description
+                                            Cluster Id
                                         </th>
 
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            property Count
-                                        </th>
                                         <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                                             Actions
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    {cluster?.map((res, idx) => (
+                                    {institition?.map((res, idx) => (
                                         <tr key={res?.id}>
                                             <td className="whitespace-nowrap text-left  pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                                                 {idx + 1}
                                             </td>
                                             <td className="whitespace-nowrap text-left  pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                                                {res?.cluster_name}
+                                                {res?.name}
                                             </td>
-                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.cluster_code}</td>
-                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.cluster_slug}</td>
-                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.description}</td>
+                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.cluster_id}</td>
 
-                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.property_count}</td>
                                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-left text-sm font-medium sm:pr-0">
                                                 <span className="p-2">
                                                     <button onClick={() => editHandler(res)} className="text-orange-600 hover:text-orange-900">
@@ -240,11 +221,11 @@ export default function ClusterDashBoard() {
                     </div>
                 </div>
             </div>
-            <AddCluster
+            <AddInstitute
                 open={open}
                 setOpen={setOpen}
-                clusterSchema={clusterSchema}
-                setClusterSchema={setClusterSchema}
+                instititionSchema={instititionSchema}
+                setInstititionSchema={setInstititionSchema}
                 submitHandler={submitHandler}
             />
         </>
