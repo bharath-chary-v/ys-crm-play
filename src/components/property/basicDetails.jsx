@@ -55,12 +55,7 @@ const BasicDetails = ({ scrollToComponent,formData, setFormData }) => {
    
     
 
-    const handleSaveAndNext = async () => {
-        if (bookingPlansRef.current) {
-            
-            scrollToComponent(bookingPlansRef.current);
-        }
-    };
+  
 
     const addProperty = async () => {
         const facilitySchema = {

@@ -13,11 +13,10 @@ function classNames(...classes) {
 export default function AddCluster({ open, setOpen, clusterSchema, setClusterSchema, submitHandler }) {
 
   const [query, setQuery] = useState('')
-  const [selectedPerson, setSelectedPerson] = useState(null)
   const [city, setCity] = useState([])
 
 
-  console.log(selectedPerson, `selectedPerson`)
+
 const getData = async () => {
   const res = await CrmService.getCity()
   console.log(res?.data?.data, `getData`)

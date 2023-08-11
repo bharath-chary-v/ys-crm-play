@@ -1,48 +1,15 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import CrmService from '../../services/crmServices'
-import { Combobox } from '@headlessui/react'
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
+
+
 
 
 
 export default function AddPaymentPlan({ open, setOpen, paymentPlanSchema, setPaymentPlanSchema, submitHandler }) {
 
-  const [query, setQuery] = useState('')
-  const [city, setCity] = useState([])
-
-
-  const categories = [
-    { id: 1, name: 'facility' },
-    { id: 2, name: 'transport' },
-    { id: 3, name: 'hospital' },
-
-  ];
-  const getData = async () => {
-    const res = await CrmService?.getCity()
-    console.log(res?.data?.data, `getData`)
-    setCity(res?.data?.data)
-  }
-
-  const selectedCity = city.find(city => city.id === paymentPlanSchema.city_id);
-  const filteredCity =
-    query === ''
-      ? city
-      : city.filter((city) => {
-        return city.city_name.toLowerCase().includes(query.toLowerCase())
-      })
-  useEffect(() => {
-    getData()
-  }, [])
-
-  const handleCityChange = (cityId) => {
-    console.log(cityId, `cityIdcityId`)
-    setPaymentPlanSchema({ ...paymentPlanSchema, city_id: cityId });
-  };
+  
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>

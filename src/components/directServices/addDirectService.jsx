@@ -13,11 +13,11 @@ function classNames(...classes) {
 export default function AddDirectService({ open, setOpen, directServiceSchema, setDirectServiceSchema, submitHandler }) {
 
   const [query, setQuery] = useState('')
-  const [selectedPerson, setSelectedPerson] = useState(null)
+
   const [cluster, setCluster] = useState([])
 
 
-  console.log(directServiceSchema, `selectedPerson`)
+
   const getData = async () => {
     const res = await CrmService.getCluster()
     console.log(res?.data?.data, `getData`)

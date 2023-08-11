@@ -1,44 +1,19 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import CrmService from '../../services/crmServices'
-import { Combobox } from '@headlessui/react'
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
+
+
 
 
 
 export default function AddInstitute({ open, setOpen, roomTypeSchema, setRoomTypeSchema, submitHandler }) {
 
-  const [query, setQuery] = useState('')
-  const [selectedPerson, setSelectedPerson] = useState(null)
-  const [cluster, setCluster] = useState([])
+  
 
 
-  console.log(roomTypeSchema, `selectedPerson`)
-  const getData = async () => {
-    const res = await CrmService.getCluster()
-    console.log(res?.data?.data, `getData`)
-    setCluster(res?.data?.data)
-  }
-  const selectedCluster = cluster.find(city => city.id === roomTypeSchema.cluster_id);
 
-  const filteredCity =
-    query === ''
-      ? cluster
-      : cluster.filter((city) => {
-        return cluster.cluster_name.toLowerCase().includes(query.toLowerCase())
-      })
-  useEffect(() => {
-    getData()
-  }, [])
 
-  const handleCityChange = (cityId) => {
-    console.log(cityId, `cityIdcityId`)
-    setRoomTypeSchema({ ...roomTypeSchema, cluster_id: cityId });
-  };
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>

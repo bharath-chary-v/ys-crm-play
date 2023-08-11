@@ -53,7 +53,7 @@ const BookingPlans = ({ scrollToComponent, formData, setFormData }) => {
     const { id, value } = e.target;
 
     if (id.startsWith('roomType')) {
-      const selectedRoomType = roomTypes.find((type) => type.id == value);
+      const selectedRoomType = roomTypes.find((type) => type.id === value);
       console.log(selectedRoomType,value, `selectedRoomType`)
       setRoomTypeLines((prevRoomTypeLines) =>
         prevRoomTypeLines.map((roomTypeLine, i) =>
@@ -183,7 +183,7 @@ const BookingPlans = ({ scrollToComponent, formData, setFormData }) => {
               value={planInfo.planType}
               onChange={(e) => {
                 const selectedPlanType = e.target.value;
-                const selectedPlan = planTypes?.find(plan => plan?.id == selectedPlanType);
+                const selectedPlan = planTypes?.find(plan => plan?.id === selectedPlanType);
                 console.log(selectedPlan, planTypes, `selectedPlanType`)
                 setPlanInfo({
                   planType: selectedPlanType,

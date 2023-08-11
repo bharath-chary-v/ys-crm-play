@@ -13,11 +13,8 @@ function classNames(...classes) {
 export default function AddInstitute({ open, setOpen, foodCategorySchema, setFoodCategorySchema, submitHandler }) {
 
   const [query, setQuery] = useState('')
-  const [selectedPerson, setSelectedPerson] = useState(null)
   const [cluster, setCluster] = useState([])
 
-
-  console.log(foodCategorySchema, `selectedPerson`)
   const getData = async () => {
     const res = await CrmService.getCluster()
     console.log(res?.data?.data, `getData`)
