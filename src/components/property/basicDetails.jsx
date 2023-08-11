@@ -4,7 +4,7 @@ import React, { useEffect, useState,useRef } from 'react';
 import CrmService from '../../services/crmServices';
 
 const BasicDetails = ({ scrollToComponent,formData, setFormData }) => {
-    const bookingPlansRef = useRef(null);
+
     const [cities, setCities] = useState([]);
     const [states, setStates] = useState([]);
     const [clusters, setClusters] = useState([]);
