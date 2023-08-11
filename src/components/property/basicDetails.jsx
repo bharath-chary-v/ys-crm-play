@@ -1,6 +1,6 @@
 // src/components/BasicInfo.js
 
-import React, { useEffect, useState,useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import CrmService from '../../services/crmServices';
 
 const BasicDetails = ({ scrollToComponent,formData, setFormData }) => {
