@@ -6,10 +6,14 @@ import { toast } from "react-toastify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Fuse from "fuse.js";
+import Pagination from "../pagination";
 
 export default function PaymentPlanDashBoard() {
     const [paymentPlan, setPaymentPlan] = useState([])
     const [paymentPlanFilter, setPaymentPlanFilter] = useState([])
+    const [currentPage, setCurrentPage] = useState(1);
+    const [recordsPerPage, setRecordsPerPage] = useState(10);
+    const [totalRecords, setTotalRecords] = useState(0);
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
     const [paymentPlanSchema, setPaymentPlanSchema] = useState({
@@ -53,6 +57,8 @@ export default function PaymentPlanDashBoard() {
             });
             setIsUpdating(false)
         }
+        getData();
+        setCurrentPage(1)
     }
     const editHandler = async (res) => {
         console.log(res, `12342`)
@@ -124,6 +130,8 @@ export default function PaymentPlanDashBoard() {
         console.log(res?.data?.data, `getPaymentPlans`)
         setPaymentPlan(res?.data?.data)
         setPaymentPlanFilter(res?.data?.data)
+        setTotalRecords(res?.data?.data?.length);
+
     }
     useEffect(() => {
         getData()
@@ -280,6 +288,11 @@ export default function PaymentPlanDashBoard() {
                     </div>
                 </div>
             </div>
+            <Pagination
+                currentPage={currentPage}
+                totalPages={Math.ceil(totalRecords / recordsPerPage)}
+                onPageChange={setCurrentPage}
+            />
             <AddPaymentPlan
                 open={open}
                 setOpen={setOpen}

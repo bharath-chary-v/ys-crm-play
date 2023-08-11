@@ -6,12 +6,15 @@ import { toast } from "react-toastify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Fuse from "fuse.js";
+import Pagination from "../pagination";
 
 
 export default function CityDashBoard() {
     const [city, setCity] = useState([])
     const [cityFilter, setCityFilter] = useState([])
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [recordsPerPage, setRecordsPerPage] = useState(10);
+    const [totalRecords, setTotalRecords] = useState(0);
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
     const [citySchema, setCitySchema] = useState({
@@ -25,7 +28,7 @@ export default function CityDashBoard() {
     })
     const submitHandler = async () => {
         if (!isUpdating) {
-          await CrmService.addCity(citySchema).then((response) => {
+            await CrmService.addCity(citySchema).then((response) => {
                 toast.success(response?.data?.status);
                 setCitySchema("");
                 getData();
@@ -35,7 +38,7 @@ export default function CityDashBoard() {
                 toast.error(message);
             });
         } else {
-             await CrmService.updateCity(citySchema).then((response) => {
+            await CrmService.updateCity(citySchema).then((response) => {
                 console.log()
                 toast.success(response?.data?.status);
                 setCitySchema("");
@@ -47,6 +50,8 @@ export default function CityDashBoard() {
             });
             setIsUpdating(false)
         }
+        getData();
+        setCurrentPage(1)
     }
     const editHandler = async (res) => {
         setCitySchema({
@@ -81,9 +86,9 @@ export default function CityDashBoard() {
                 keys: ["city_name", "state"],
             });
             let result = usingFuse.search(`^${e.target.value}`).map((search) => search.item);
-            console.log(cityFilter,`result`)
+            console.log(cityFilter, `result`)
             setCity(result)
-        }else{
+        } else {
             setCity(cityFilter)
         }
 
@@ -111,6 +116,7 @@ export default function CityDashBoard() {
         console.log(res?.data?.data, `getData`)
         setCity(res?.data?.data)
         setCityFilter(res?.data?.data)
+        setTotalRecords(res?.data?.data?.length);
     }
     useEffect(() => {
         getData()
@@ -179,9 +185,11 @@ export default function CityDashBoard() {
                     </div>
                 </div>
 
-
+               
                 <div className="flow-root">
+                
                     <div className=" overflow-x-auto sm:-mx-6 lg:-mx-8">
+
                         <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                             <table className=" min-w-full divide-y divide-gray-300">
                                 <thead>
@@ -210,7 +218,7 @@ export default function CityDashBoard() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    {city?.map((res, idx) => (
+                                    {city.slice((currentPage - 1) * recordsPerPage, currentPage * recordsPerPage)?.map((res, idx) => (
                                         <tr key={res?.id}>
                                             <td className="whitespace-nowrap text-left  pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                                                 {idx + 1}
@@ -243,7 +251,13 @@ export default function CityDashBoard() {
                         </div>
                     </div>
                 </div>
+                
             </div>
+            <Pagination
+                    currentPage={currentPage}
+                    totalPages={Math.ceil(totalRecords / recordsPerPage)}
+                    onPageChange={setCurrentPage}
+                />
             <AddCity
                 open={open}
                 setOpen={setOpen}

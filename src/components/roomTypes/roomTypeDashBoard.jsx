@@ -6,12 +6,16 @@ import { toast } from "react-toastify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Fuse from "fuse.js";
+import Pagination from "../pagination";
 
 export default function RoomTypeDashBoard() {
     const [roomType, setRoomType] = useState([])
     const [roomTypeFilter, setRoomTypeFilter] = useState([])
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
+    const [currentPage, setCurrentPage] = useState(1);
+    const [recordsPerPage, setRecordsPerPage] = useState(10);
+    const [totalRecords, setTotalRecords] = useState(0);
     const [roomTypeSchema, setRoomTypeSchema] = useState({
         id: "",
         name: "",
@@ -46,6 +50,8 @@ export default function RoomTypeDashBoard() {
             });
             setIsUpdating(false)
         }
+        getData();
+        setCurrentPage(1)
     }
     const editHandler = async (res) => {
         console.log(res, `12342`)
@@ -104,6 +110,8 @@ export default function RoomTypeDashBoard() {
         console.log(res?.data?.data, `res?.data?.data`)
         setRoomType(res?.data?.data)
         setRoomTypeFilter(res?.data?.data)
+        setTotalRecords(res?.data?.data?.length);
+
     }
     useEffect(() => {
         getData()
@@ -227,6 +235,11 @@ export default function RoomTypeDashBoard() {
                     </div>
                 </div>
             </div>
+            <Pagination
+                currentPage={currentPage}
+                totalPages={Math.ceil(totalRecords / recordsPerPage)}
+                onPageChange={setCurrentPage}
+            />
             <AddInstitute
                 open={open}
                 setOpen={setOpen}

@@ -12,7 +12,7 @@ export default function PropertyOnBoard() {
     const propertyOwnerRef = useRef(null);
     const websiteListingRef = useRef(null);
     const operationsRef = useRef(null);
-
+   
     const [activeComponent, setActiveComponent] = useState("basicDetails");
     const [formData, setFormData] = useState({
         name: '',
@@ -130,7 +130,6 @@ export default function PropertyOnBoard() {
                     Operations
                 </button>
             </div>
-
             <div className="pt-2 bg-slate-100 px-4 sm:px-6 lg:px-8">
                 <div className="mt-6" ref={basicDetailsRef} id="basicDetails">
                     <BasicDetails scrollToComponent={scrollToComponent} formData={formData} setFormData={setFormData}/>

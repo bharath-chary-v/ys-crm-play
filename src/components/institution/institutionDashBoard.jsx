@@ -6,10 +6,19 @@ import { toast } from "react-toastify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Fuse from "fuse.js";
+import Pagination from "../pagination";
 
+/**
+ * React component that displays a list of institutes and provides functionality for searching, adding, editing, and deleting institutes.
+ *
+ * @returns {JSX.Element} The rendered component.
+ */
 export default function InstitutionDashBoard() {
     const [institition, setInstitition] = useState([])
     const [instititionFilter, setInstititionFilter] = useState([])
+    const [currentPage, setCurrentPage] = useState(1);
+    const [recordsPerPage, setRecordsPerPage] = useState(10);
+    const [totalRecords, setTotalRecords] = useState(0);
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
     const [instititionSchema, setInstititionSchema] = useState({
@@ -44,6 +53,8 @@ export default function InstitutionDashBoard() {
             });
             setIsUpdating(false)
         }
+        getData();
+        setCurrentPage(1)
     }
     const editHandler = async (res) => {
         console.log(res, `12342`)
@@ -104,6 +115,8 @@ export default function InstitutionDashBoard() {
         const res = await CrmService?.getInstitutes()
         setInstitition(res?.data?.data)
         setInstititionFilter(res?.data?.data)
+        setTotalRecords(res?.data?.data?.length);
+
     }
     useEffect(() => {
         getData()
@@ -221,6 +234,11 @@ export default function InstitutionDashBoard() {
                     </div>
                 </div>
             </div>
+            <Pagination
+                currentPage={currentPage}
+                totalPages={Math.ceil(totalRecords / recordsPerPage)}
+                onPageChange={setCurrentPage}
+            />
             <AddInstitute
                 open={open}
                 setOpen={setOpen}

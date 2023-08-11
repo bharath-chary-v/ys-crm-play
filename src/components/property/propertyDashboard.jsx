@@ -9,11 +9,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Fuse from "fuse.js";
 import { useNavigate } from "react-router-dom"; 
+import Pagination from "../pagination";
 
 
 export default function PropertyDashBoard() {
     const [propertyList, setPropertyList] = useState([])
     const [propertyListFilter, setPropertyListFilter] = useState([])
+    const [currentPage, setCurrentPage] = useState(1);
+    const [recordsPerPage, setRecordsPerPage] = useState(10);
+    const [totalRecords, setTotalRecords] = useState(0);
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
     const [clusterSchema, setClusterSchema] = useState({
@@ -49,6 +53,8 @@ export default function PropertyDashBoard() {
     const addClusterHandler = () => {
         navigate(`/properties/propertyOnBoard`);
         setOpen(true)
+        getData();
+        setCurrentPage(1)
 
     }
     const openHandler = (res) => {
@@ -74,6 +80,8 @@ export default function PropertyDashBoard() {
         console.log(res?.data?.data, `getData`)
         setPropertyList(res?.data?.data)
         setPropertyListFilter(res?.data?.data)
+        setTotalRecords(res?.data?.data?.length);
+
     }
     useEffect(() => {
         getData()
@@ -201,7 +209,11 @@ export default function PropertyDashBoard() {
                     </div>
                 </div>
             </div>
-
+            <Pagination
+                currentPage={currentPage}
+                totalPages={Math.ceil(totalRecords / recordsPerPage)}
+                onPageChange={setCurrentPage}
+            />
         </>
 
     )

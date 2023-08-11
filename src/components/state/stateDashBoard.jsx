@@ -6,12 +6,15 @@ import { toast } from "react-toastify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Fuse from "fuse.js";
+import Pagination from "../pagination";
 
 
 export default function StateDashBoard() {
     const [state, setState] = useState([])
     const [stateFilter, setStateFilter] = useState([])
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [recordsPerPage, setRecordsPerPage] = useState(10);
+    const [totalRecords, setTotalRecords] = useState(0);
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
     const [stateSchema, setStateSchema] = useState({
@@ -49,6 +52,8 @@ export default function StateDashBoard() {
             });
             setIsUpdating(false)
         }
+        getData();
+        setCurrentPage(1)
     }
     const editHandler = async (res) => {
         setStateSchema({
@@ -111,6 +116,8 @@ export default function StateDashBoard() {
         console.log(res?.data?.data, `getData`)
         setState(res?.data?.data)
         setStateFilter(res?.data?.data)
+        setTotalRecords(res?.data?.data?.length);
+
     }
     useEffect(() => {
         getData()
@@ -242,6 +249,11 @@ export default function StateDashBoard() {
                     </div>
                 </div>
             </div>
+            <Pagination
+                currentPage={currentPage}
+                totalPages={Math.ceil(totalRecords / recordsPerPage)}
+                onPageChange={setCurrentPage}
+            />
             <AddState
                 open={open}
                 setOpen={setOpen}

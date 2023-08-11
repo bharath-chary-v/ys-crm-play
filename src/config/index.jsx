@@ -58,6 +58,23 @@ class CONFIG {
 
         }
     }
+    food_erp() {
+        return {
+            url: 'https://api.staging.your-space.in/food_erp_dashboard/v1/admin', 
+            path:{
+                foodCategory: {
+                    getFoodCategory: `food_category`,
+                    addFoodCategory: `food_categorys`,
+                    updateFoodCategory: `food_category`
+                },
+                foodItem: {
+                    getFoodItems: `food_item`,
+                    addFoodItem: `food_item`,
+                    updateFoodItem: `food_item`
+                },
+            }
+        } 
+    }
 }
 
 const configService = new CONFIG();

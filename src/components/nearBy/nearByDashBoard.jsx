@@ -6,10 +6,14 @@ import { toast } from "react-toastify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Fuse from "fuse.js";
+import Pagination from "../pagination";
 
 export default function NearByDashBoard() {
     const [nearBy, setNearBy] = useState([])
     const [nearByFilter, setNearByFilter] = useState([])
+    const [currentPage, setCurrentPage] = useState(1);
+    const [recordsPerPage, setRecordsPerPage] = useState(10);
+    const [totalRecords, setTotalRecords] = useState(0);
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
     const [nearBySchema, setNearBySchema] = useState({
@@ -46,6 +50,8 @@ export default function NearByDashBoard() {
             });
             setIsUpdating(false)
         }
+        getData();
+        setCurrentPage(1)
     }
     const editHandler = async (res) => {
         console.log(res, `12342`)
@@ -103,6 +109,8 @@ export default function NearByDashBoard() {
         const res = await CrmService?.getNearBy()
         setNearBy(res?.data?.data)
         setNearByFilter(res?.data?.data)
+        setTotalRecords(res?.data?.data?.length);
+
     }
     useEffect(() => {
         getData()
@@ -228,6 +236,11 @@ export default function NearByDashBoard() {
                     </div>
                 </div>
             </div>
+            <Pagination
+                currentPage={currentPage}
+                totalPages={Math.ceil(totalRecords / recordsPerPage)}
+                onPageChange={setCurrentPage}
+            />
             <AddInstitute
                 open={open}
                 setOpen={setOpen}

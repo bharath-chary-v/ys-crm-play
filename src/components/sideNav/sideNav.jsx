@@ -1,20 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Route, Routes, useLocation } from "react-router-dom";
-import PropertyDashBoard from "../property/propertyDashboard";
+// import PropertyDashBoard from "../property/propertyDashboard";
 
 const SideNav = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isMastersMenuOpen, setIsMastersMenuOpen] = useState(false);
+    const [isFoodMenuOpen, setIsFoodMenuOpen] = useState(false);
 
     const toggleMenu = () => {
         setIsMenuOpen((prev) => !prev);
     };
-
+    const toogleFoodMenu = () => {
+        setIsFoodMenuOpen((prev) => !prev)
+    }
+    const toggleMastersMenu = () => {
+        setIsMastersMenuOpen((prev) => !prev);
+    };
     const location = useLocation();
 
     const isActiveLink = (to) => {
         return location.pathname.includes(to);
-      };
-
+    };
+    useEffect(() => {
+        setIsFoodMenuOpen(isActiveLink("/food"));
+        setIsMastersMenuOpen(isActiveLink("/masters"));
+    }, [location.pathname]);
+      console.log(isFoodMenuOpen,isMastersMenuOpen,`sMastersMenuOpen`)
     return (
         <div className="relative flex flex-col md:flex-row md:h-screen">
             {/* Menu Button */}
@@ -60,23 +71,23 @@ const SideNav = () => {
                         </Link>
                     </li>
                     <li
-                        className={`px-4 py-3  ${isActiveLink("/properties") ? "bg-white text-teal-500" : ""
+                        className={`px-4 py-3  ${isActiveLink("/properties") ? "bg-white text-orange-500" : ""
                             }`}
                     >
                         <Link to="/properties" className="block font-semibold">
-                          + Properties
+                            + Properties
                         </Link>
                     </li>
                     <li
-                        className={`px-4 py-3  ${isActiveLink("/Residents") ? "bg-white text-teal-500" : ""
+                        className={`px-4 py-3  ${isActiveLink("/Residents") ? "bg-white text-orange-500" : ""
                             }`}
                     >
                         <Link to="/Residents" className="block font-semibold">
-                           + Residents
+                            + Residents
                         </Link>
                     </li>
                     <li
-                        className={`px-4 py-3 ${isActiveLink("/Revenue") ? "bg-white text-teal-500" : ""
+                        className={`px-4 py-3 ${isActiveLink("/Revenue") ? "bg-white text-orange-500" : ""
                             }`}
                     >
                         <Link to="/Revenue" className="block font-semibold">
@@ -84,7 +95,7 @@ const SideNav = () => {
                         </Link>
                     </li>
                     <li
-                        className={`px-4 py-3 ${isActiveLink("/Services") ? "bg-white text-teal-500" : ""
+                        className={`px-4 py-3 ${isActiveLink("/Services") ? "bg-white text-orange-500" : ""
                             }`}
                     >
                         <Link to="/Services" className="block font-semibold">
@@ -92,7 +103,7 @@ const SideNav = () => {
                         </Link>
                     </li>
                     <li
-                        className={`px-4 py-3 ${isActiveLink("/Leads") ? "bg-white text-teal-500" : ""
+                        className={`px-4 py-3 ${isActiveLink("/Leads") ? "bg-white text-orange-500" : ""
                             }`}
                     >
                         <Link to="/Leads" className="block font-semibold">
@@ -100,7 +111,7 @@ const SideNav = () => {
                         </Link>
                     </li>
                     <li
-                        className={`px-4 py-3 ${isActiveLink("/Tickets") ? "bg-white text-teal-500" : ""
+                        className={`px-4 py-3 ${isActiveLink("/Tickets") ? "bg-white text-orange-500" : ""
                             }`}
                     >
                         <Link to="/Tickets" className="block font-semibold">
@@ -108,36 +119,110 @@ const SideNav = () => {
                         </Link>
                     </li>
                     <li
-                        className={`px-4 py-3 ${isActiveLink("/Food") ? "bg-white text-teal-500" : ""
+                        className={`px-4 py-3 ${isActiveLink("/food") ? "bg-white text-teal-500" : ""
                             }`}
                     >
-                        <Link to="/Food" className="block font-semibold">
+                        <button to="/food" onClick={toogleFoodMenu} className="block font-semibold">
                             + Food
-                        </Link>
+                        </button>
+                        {isFoodMenuOpen && (
+                            <ul className="ml-4">
+                                <li
+                                    className={`px-4 py-3 ${isActiveLink("/food_category") ? "bg-white text-orange-500" : ""
+                                        }`}
+                                >
+                                    <Link to="/food/food_category" className="block font-semibold">
+                                        Food Category
+                                    </Link>
+                                </li>
+                                <li
+                                    className={`px-4 py-3 ${isActiveLink("/food_item") ? "bg-white text-orange-500" : ""
+                                        }`}
+                                >
+                                    <Link to="/food/food_item" className="block font-semibold">
+                                        Food Item
+                                    </Link>
+                                </li>
+
+                            </ul>
+                        )}
                     </li>
                     <li
-                        className={`px-4 py-3 ${isActiveLink("/Engagement") ? "bg-white text-teal-500" : ""
+                        className={`px-4 py-3 ${isActiveLink("/Engagement") ? "bg-white text-orange-500" : ""
                             }`}
                     >
                         <Link to="/Engagement" className="block font-semibold">
                             + Engagement
                         </Link>
                     </li>
-                    <li
-                        className={`px-4 py-3 ${isActiveLink("/Engagement") ? "bg-white text-teal-500" : ""
-                            }`}
-                    >
-                        <Link to="/Ops" className="block font-semibold">
-                            + Engagement
-                        </Link>
-                    </li>
+
                     <li
                         className={`px-4 py-3 ${isActiveLink("/masters") ? "bg-white text-teal-500" : ""
                             }`}
                     >
-                        <Link to="/masters" className="block font-semibold">
-                           + Masters
-                        </Link>
+                        <button to="/masters" onClick={toggleMastersMenu} className="block font-semibold">
+                            + Masters
+                        </button>
+                        {isMastersMenuOpen && (
+                            <ul className="ml-4">
+                                <li
+                                    className={`px-4 py-3 ${isActiveLink("/state") ? "bg-white text-orange-500" : ""
+                                        }`}
+                                >
+                                    <Link to="/masters/state" className="block font-semibold">
+                                        State
+                                    </Link>
+                                </li>
+                                <li
+                                    className={`px-4 py-3 ${isActiveLink("/city") ? "bg-white text-orange-500" : ""
+                                        }`}
+                                >
+                                    <Link to="/masters/city" className="block font-semibold">
+                                        City
+                                    </Link>
+                                </li>
+                                <li
+                                    className={`px-4 py-3 ${isActiveLink("/cluster") ? "bg-white text-orange-500" : ""
+                                        }`}
+                                >
+                                    <Link to="/masters/cluster" className="block font-semibold">
+                                        Cluster
+                                    </Link>
+                                </li>
+                                <li
+                                    className={`px-4 py-3 ${isActiveLink("/paymentPlans") ? "bg-white text-orange-500" : ""
+                                        }`}
+                                >
+                                    <Link to="/masters/paymentPlans" className="block font-semibold">
+                                        Room Types
+                                    </Link>
+                                </li>
+                                <li
+                                    className={`px-4 py-3 ${isActiveLink("/paymentPlans") ? "bg-white text-orange-500" : ""
+                                        }`}
+                                >
+                                    <Link to="/masters/paymentPlans" className="block font-semibold">
+                                        Payment Plan
+                                    </Link>
+                                </li>
+                                <li
+                                    className={`px-4 py-3 ${isActiveLink("/institutes") ? "bg-white text-orange-500" : ""
+                                        }`}
+                                >
+                                    <Link to="/masters/institutes" className="block font-semibold">
+                                        Institues
+                                    </Link>
+                                </li>
+                                <li
+                                    className={`px-4 py-3 ${isActiveLink("/nearby") ? "bg-white text-orange-500" : ""
+                                        }`}
+                                >
+                                    <Link to="/masters/nearby" className="block font-semibold">
+                                        NearBy
+                                    </Link>
+                                </li>
+                            </ul>
+                        )}
                     </li>
 
                     {/* Add other nav links with the same pattern */}

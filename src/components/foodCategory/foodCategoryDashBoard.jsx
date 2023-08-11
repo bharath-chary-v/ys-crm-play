@@ -1,22 +1,22 @@
 
 import { useEffect, useState } from "react"
-import CrmService from "../../services/crmServices"
-import AddDirectService from "./addDirectService"
+import FoodService from "../../services/foodErpService"
+import AddInstitute from "./addCategory"
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Fuse from "fuse.js";
 import Pagination from "../pagination";
 
-export default function DirectServicesDashboard() {
-    const [directService, setDirectService] = useState([])
-    const [directServiceFilter, setDirectServiceFilter] = useState([])
+export default function FoodCategoryDashBoard() {
+    const [foodCategory, setFoodCategory] = useState([])
+    const [foodCategoryFilter, setFoodCategoryFilter] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage, setRecordsPerPage] = useState(10);
     const [totalRecords, setTotalRecords] = useState(0);
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
-    const [directServiceSchema, setDirectServiceSchema] = useState({
+    const [foodCategorySchema, setFoodCategorySchema] = useState({
         id: "",
         name: "",
         cluster_id: "",
@@ -25,9 +25,9 @@ export default function DirectServicesDashboard() {
 
     const submitHandler = async () => {
         if (!isUpdating) {
-            await CrmService.addDirectService(directServiceSchema).then((response) => {
+            await FoodService.addFoodCategory(foodCategorySchema).then((response) => {
                 toast.success(response?.data?.status);
-                setDirectServiceSchema("");
+                setFoodCategorySchema("");
                 getData();
                 setOpen(false)
             }).catch((err) => {
@@ -35,11 +35,11 @@ export default function DirectServicesDashboard() {
                 toast.error(message);
             });
         } else {
-            console.log(directServiceSchema, `directServiceSchema`)
-            await CrmService.updateDirectService(directServiceSchema).then((response) => {
+            console.log(foodCategorySchema, `foodCategorySchema`)
+            await FoodService.updateFoodCategory(foodCategorySchema).then((response) => {
                 console.log()
                 toast.success(response?.data?.status);
-                setDirectServiceSchema("");
+                setFoodCategorySchema("");
                 getData();
                 setOpen(false)
             }).catch((err) => {
@@ -53,8 +53,8 @@ export default function DirectServicesDashboard() {
     }
     const editHandler = async (res) => {
         console.log(res, `12342`)
-        setDirectServiceSchema({
-            ...directServiceSchema,
+        setFoodCategorySchema({
+            ...foodCategorySchema,
             id: res?.id,
             name: res?.name,
             cluster_id: res?.cluster_id,
@@ -66,31 +66,31 @@ export default function DirectServicesDashboard() {
     }
     const searchFilter = (e) => {
         if (e.target.value.length >= 3) {
-            const usingFuse = new Fuse(directServiceFilter, {
+            const usingFuse = new Fuse(foodCategoryFilter, {
                 keys: ["city_name", "state"],
             });
             let result = usingFuse.search(`^${e.target.value}`).map((search) => search.item);
 
-            setDirectService(result)
+            setFoodCategory(result)
         } else {
-            setDirectService(directServiceFilter)
+            setFoodCategory(foodCategoryFilter)
         }
 
     };
     const addInstituteHandler = () => {
 
         setOpen(true)
-        setDirectServiceSchema({
+        setFoodCategorySchema({
             id: "",
             name: "",
             cluster_id: "",
         })
     }
     const deleteHandler = async (data) => {
-        await CrmService.updateDirectService(directServiceSchema).then((response) => {
+        await FoodService.updateFoodCategory(foodCategorySchema).then((response) => {
             console.log()
             toast.success(response?.data?.status);
-            setDirectServiceSchema("");
+            setFoodCategorySchema("");
             getData();
             setOpen(false)
         }).catch((err) => {
@@ -101,19 +101,18 @@ export default function DirectServicesDashboard() {
     }
 
     const getData = async () => {
-        const res = await CrmService?.getDirectServices()
-        console.log(res?.data?.data, `getDirectServices`)
-        setDirectService(res?.data?.data)
-        setDirectServiceFilter(res?.data?.data)
+        const res = await FoodService?.getFoodCategories()
+        setFoodCategory(res?.data?.data)
+        setFoodCategoryFilter(res?.data?.data)
         setTotalRecords(res?.data?.data?.length);
 
     }
     useEffect(() => {
         getData()
-        setDirectServiceSchema({
+        setFoodCategorySchema({ 
             id: "",
             name: "",
-            cluster_id: "",
+            cluster_id: "", 
         })
     }, [])
 
@@ -124,7 +123,7 @@ export default function DirectServicesDashboard() {
                 <div class="sm:flex gap-4">
                     <div class="sm:flex mr-12">
                         <p class="text-3xl font-semibold text-orange-500">
-                            Services
+                            Food Category
                         </p>
                     </div>
                     <div class="sm:flex-auto">
@@ -166,7 +165,7 @@ export default function DirectServicesDashboard() {
                             onClick={() => addInstituteHandler()}
                             className=" rounded-md bg-orange-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
                         >
-                            Add Service
+                            Add Food Category
                         </button>
                     </div>
                 </div>
@@ -180,16 +179,10 @@ export default function DirectServicesDashboard() {
                                             S. No
                                         </th>
                                         <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
-                                            Service Name
+                                             Name
                                         </th>
                                         <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            description
-                                        </th>
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            category
-                                        </th>
-                                        <th scope="co   l" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            Base Amount
+                                        Acitive
                                         </th>
 
                                         <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
@@ -198,7 +191,7 @@ export default function DirectServicesDashboard() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    {directService?.map((res, idx) => (
+                                    {foodCategory?.map((res, idx) => (
                                         <tr key={res?.id}>
                                             <td className="whitespace-nowrap text-left  pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                                                 {idx + 1}
@@ -206,11 +199,7 @@ export default function DirectServicesDashboard() {
                                             <td className="whitespace-nowrap text-left  pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                                                 {res?.name}
                                             </td>
-                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.description}</td>
-                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.category}</td>
-
-                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.base_amount}</td>
-
+                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.is_active ? "Yes" : "No "}</td>
 
                                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-left text-sm font-medium sm:pr-0">
                                                 <span className="p-2">
@@ -239,11 +228,11 @@ export default function DirectServicesDashboard() {
                 totalPages={Math.ceil(totalRecords / recordsPerPage)}
                 onPageChange={setCurrentPage}
             />
-            <AddDirectService
+            <AddInstitute
                 open={open}
                 setOpen={setOpen}
-                directServiceSchema={directServiceSchema}
-                setDirectServiceSchema={setDirectServiceSchema}
+                foodCategorySchema={foodCategorySchema}
+                setFoodCategorySchema={setFoodCategorySchema}
                 submitHandler={submitHandler}
             />
         </>

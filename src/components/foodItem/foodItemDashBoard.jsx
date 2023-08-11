@@ -1,22 +1,22 @@
 
 import { useEffect, useState } from "react"
-import CrmService from "../../services/crmServices"
-import AddDirectService from "./addDirectService"
+import FoodService from "../../services/foodErpService"
+import AddInstitute from "./addItem"
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Fuse from "fuse.js";
 import Pagination from "../pagination";
 
-export default function DirectServicesDashboard() {
-    const [directService, setDirectService] = useState([])
-    const [directServiceFilter, setDirectServiceFilter] = useState([])
+export default function FoodItemDashBoard() {
+    const [foodItem, setFoodItem] = useState([])
+    const [foodItemFilter, setFoodItemFilter] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage, setRecordsPerPage] = useState(10);
     const [totalRecords, setTotalRecords] = useState(0);
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
-    const [directServiceSchema, setDirectServiceSchema] = useState({
+    const [foodItemSchema, setFoodItemSchema] = useState({
         id: "",
         name: "",
         cluster_id: "",
@@ -25,9 +25,9 @@ export default function DirectServicesDashboard() {
 
     const submitHandler = async () => {
         if (!isUpdating) {
-            await CrmService.addDirectService(directServiceSchema).then((response) => {
+            await FoodService.addFoodItem(foodItemSchema).then((response) => {
                 toast.success(response?.data?.status);
-                setDirectServiceSchema("");
+                setFoodItemSchema("");
                 getData();
                 setOpen(false)
             }).catch((err) => {
@@ -35,11 +35,11 @@ export default function DirectServicesDashboard() {
                 toast.error(message);
             });
         } else {
-            console.log(directServiceSchema, `directServiceSchema`)
-            await CrmService.updateDirectService(directServiceSchema).then((response) => {
+            console.log(foodItemSchema, `foodItemSchema`)
+            await FoodService.updateFoodCategory(foodItemSchema).then((response) => {
                 console.log()
                 toast.success(response?.data?.status);
-                setDirectServiceSchema("");
+                setFoodItemSchema("");
                 getData();
                 setOpen(false)
             }).catch((err) => {
@@ -53,8 +53,8 @@ export default function DirectServicesDashboard() {
     }
     const editHandler = async (res) => {
         console.log(res, `12342`)
-        setDirectServiceSchema({
-            ...directServiceSchema,
+        setFoodItemSchema({
+            ...foodItemSchema,
             id: res?.id,
             name: res?.name,
             cluster_id: res?.cluster_id,
@@ -66,31 +66,31 @@ export default function DirectServicesDashboard() {
     }
     const searchFilter = (e) => {
         if (e.target.value.length >= 3) {
-            const usingFuse = new Fuse(directServiceFilter, {
+            const usingFuse = new Fuse(foodItemFilter, {
                 keys: ["city_name", "state"],
             });
             let result = usingFuse.search(`^${e.target.value}`).map((search) => search.item);
 
-            setDirectService(result)
+            setFoodItem(result)
         } else {
-            setDirectService(directServiceFilter)
+            setFoodItem(foodItemFilter)
         }
 
     };
     const addInstituteHandler = () => {
 
         setOpen(true)
-        setDirectServiceSchema({
+        setFoodItemSchema({
             id: "",
             name: "",
             cluster_id: "",
         })
     }
     const deleteHandler = async (data) => {
-        await CrmService.updateDirectService(directServiceSchema).then((response) => {
+        await FoodService.updateFoodCategory(foodItemSchema).then((response) => {
             console.log()
             toast.success(response?.data?.status);
-            setDirectServiceSchema("");
+            setFoodItemSchema("");
             getData();
             setOpen(false)
         }).catch((err) => {
@@ -101,16 +101,16 @@ export default function DirectServicesDashboard() {
     }
 
     const getData = async () => {
-        const res = await CrmService?.getDirectServices()
-        console.log(res?.data?.data, `getDirectServices`)
-        setDirectService(res?.data?.data)
-        setDirectServiceFilter(res?.data?.data)
+        const res = await FoodService?.getFoodItems()
+        console.log(res?.data?.data, `getFoodItems`)
+        setFoodItem(res?.data?.data)
+        setFoodItemFilter(res?.data?.data)
         setTotalRecords(res?.data?.data?.length);
 
     }
     useEffect(() => {
         getData()
-        setDirectServiceSchema({
+        setFoodItemSchema({
             id: "",
             name: "",
             cluster_id: "",
@@ -124,7 +124,7 @@ export default function DirectServicesDashboard() {
                 <div class="sm:flex gap-4">
                     <div class="sm:flex mr-12">
                         <p class="text-3xl font-semibold text-orange-500">
-                            Services
+                            Food Items
                         </p>
                     </div>
                     <div class="sm:flex-auto">
@@ -166,7 +166,7 @@ export default function DirectServicesDashboard() {
                             onClick={() => addInstituteHandler()}
                             className=" rounded-md bg-orange-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
                         >
-                            Add Service
+                            Add Food Item
                         </button>
                     </div>
                 </div>
@@ -180,16 +180,25 @@ export default function DirectServicesDashboard() {
                                             S. No
                                         </th>
                                         <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
-                                            Service Name
+                                            Food Name
                                         </th>
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            description
+                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                                            Category
                                         </th>
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                            category
+                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                                            Description
                                         </th>
-                                        <th scope="co   l" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
                                             Base Amount
+                                        </th>
+                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                                            Service Charges
+                                        </th>
+                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                                            Image
+                                        </th>
+                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                            Acitive
                                         </th>
 
                                         <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
@@ -198,18 +207,22 @@ export default function DirectServicesDashboard() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    {directService?.map((res, idx) => (
+                                    {foodItem?.map((res, idx) => (
                                         <tr key={res?.id}>
                                             <td className="whitespace-nowrap text-left  pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                                                 {idx + 1}
                                             </td>
                                             <td className="whitespace-nowrap text-left  pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                                                {res?.name}
+                                                {res?.food_name}
                                             </td>
-                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.description}</td>
-                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.category}</td>
+                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.food_category?.name}</td>
 
+                                            <td className="whitespace-normal text-left px-3 py-4 text-sm text-gray-500">{res?.food_description}</td>
                                             <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.base_amount}</td>
+                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.service_charges}</td>
+
+                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.is_active }</td>
+                                            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">{res?.is_active ? "Yes" : "No"}</td>
 
 
                                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-left text-sm font-medium sm:pr-0">
@@ -239,11 +252,11 @@ export default function DirectServicesDashboard() {
                 totalPages={Math.ceil(totalRecords / recordsPerPage)}
                 onPageChange={setCurrentPage}
             />
-            <AddDirectService
+            <AddInstitute
                 open={open}
                 setOpen={setOpen}
-                directServiceSchema={directServiceSchema}
-                setDirectServiceSchema={setDirectServiceSchema}
+                foodItemSchema={foodItemSchema}
+                setFoodItemSchema={setFoodItemSchema}
                 submitHandler={submitHandler}
             />
         </>

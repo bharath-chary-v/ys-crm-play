@@ -6,10 +6,14 @@ import { toast } from "react-toastify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Fuse from "fuse.js";
+import Pagination from "../pagination";
 
 export default function ClusterDashBoard() {
     const [cluster, setCluster] = useState([])
     const [clusterFilter, setClusterFilter] = useState([])
+    const [currentPage, setCurrentPage] = useState(1);
+    const [recordsPerPage, setRecordsPerPage] = useState(10);
+    const [totalRecords, setTotalRecords] = useState(0);
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
     const [clusterSchema, setClusterSchema] = useState({
@@ -46,6 +50,8 @@ export default function ClusterDashBoard() {
             });
             setIsUpdating(false)
         }
+        getData();
+        setCurrentPage(1)
     }
     const editHandler = async (res) => {
         console.log(res, `12342`)
@@ -108,6 +114,8 @@ export default function ClusterDashBoard() {
         console.log(res?.data?.data, `getData`)
         setCluster(res?.data?.data)
         setClusterFilter(res?.data?.data)
+        setTotalRecords(res?.data?.data?.length);
+
     }
     useEffect(() => {
         getData()
@@ -240,6 +248,11 @@ export default function ClusterDashBoard() {
                     </div>
                 </div>
             </div>
+            <Pagination
+                    currentPage={currentPage}
+                    totalPages={Math.ceil(totalRecords / recordsPerPage)}
+                    onPageChange={setCurrentPage}
+                />
             <AddCluster
                 open={open}
                 setOpen={setOpen}
