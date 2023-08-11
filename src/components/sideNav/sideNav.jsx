@@ -195,7 +195,7 @@ const SideNav = () => {
                                     </Link>
                                 </li>
                                 <li
-                                    className={`px-4 py-3 ${isActiveLink("/paymentPlans") ? "bg-white text-orange-500" : ""
+                                    className={`px-4 py-3 ${isActiveLink("/roomTypes") ? "bg-white text-orange-500" : ""
                                         }`}
                                 >
                                     <Link to="/masters/paymentPlans" className="block font-semibold">
