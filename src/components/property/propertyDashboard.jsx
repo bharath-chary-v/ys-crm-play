@@ -13,13 +13,12 @@ import Pagination from "../pagination";
 
 
 export default function PropertyDashBoard() {
+    let recordsPerPage = 10
+
     const [propertyList, setPropertyList] = useState([])
     const [propertyListFilter, setPropertyListFilter] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage, setRecordsPerPage] = useState(10);
     const [totalRecords, setTotalRecords] = useState(0);
-    const [open, setOpen] = useState(false)
-    const [isUpdating, setIsUpdating] = useState(false)
     const [clusterSchema, setClusterSchema] = useState({
         cluster_name: "",
         description: "",
@@ -52,26 +51,24 @@ export default function PropertyDashBoard() {
     };
     const addClusterHandler = () => {
         navigate(`/properties/propertyOnBoard`);
-        setOpen(true)
+
         getData();
         setCurrentPage(1)
 
     }
-    const openHandler = (res) => {
-
-    }
+   
     const deleteHandler = async (data) => {
         await CrmService.updateCluster(clusterSchema).then((response) => {
             console.log()
             toast.success(response?.data?.status);
             setClusterSchema("");
             getData();
-            setOpen(false)
+
         }).catch((err) => {
             const message = `Error Adding City`;
             toast.error(message);
         });
-        setIsUpdating(false)
+
     }
 
     const getData = async () => {

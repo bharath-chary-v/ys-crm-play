@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, Route, Routes, useLocation } from "react-router-dom";
+import React, { useCallback, useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 // import PropertyDashBoard from "../property/propertyDashboard";
 
 const SideNav = () => {
@@ -18,13 +18,18 @@ const SideNav = () => {
     };
     const location = useLocation();
 
-    const isActiveLink = (to) => {
+    const isActiveLink = useCallback((to) => {
         return location.pathname.includes(to);
-    };
+    },[location.pathname]);
     useEffect(() => {
-        setIsFoodMenuOpen(isActiveLink("/food"));
-        setIsMastersMenuOpen(isActiveLink("/masters"));
-    }, [location.pathname]);
+        const checkAndSetMenus = () => {
+            setIsFoodMenuOpen(isActiveLink("/food"));
+            setIsMastersMenuOpen(isActiveLink("/masters"));
+        };
+    
+        checkAndSetMenus(); // Call it immediately after defining
+    
+    }, [isActiveLink]);
       console.log(isFoodMenuOpen,isMastersMenuOpen,`sMastersMenuOpen`)
     return (
         <div className="relative flex flex-col md:flex-row md:h-screen">

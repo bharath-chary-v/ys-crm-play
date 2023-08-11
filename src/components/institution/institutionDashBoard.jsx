@@ -14,10 +14,11 @@ import Pagination from "../pagination";
  * @returns {JSX.Element} The rendered component.
  */
 export default function InstitutionDashBoard() {
+    let recordsPerPage = 10
+
     const [institition, setInstitition] = useState([])
     const [instititionFilter, setInstititionFilter] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage, setRecordsPerPage] = useState(10);
     const [totalRecords, setTotalRecords] = useState(0);
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
@@ -104,13 +105,7 @@ export default function InstitutionDashBoard() {
         });
         setIsUpdating(false)
     }
-    const getCluster = async (clusterId) => {
-        const clusterData = await CrmService?.getCluster(); // Replace with your actual API call
-        console.log(clusterData?.data?.data, `getData`)
 
-        const cluster = clusterData?.data?.data.find(city => city?.id === clusterId);
-        return cluster ? cluster.cluster_name : 'N/A';
-    };
     const getData = async () => {
         const res = await CrmService?.getInstitutes()
         setInstitition(res?.data?.data)

@@ -10,10 +10,11 @@ import Pagination from "../pagination";
 
 
 export default function CityDashBoard() {
+    let recordsPerPage = 10
+
     const [city, setCity] = useState([])
     const [cityFilter, setCityFilter] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage, setRecordsPerPage] = useState(10);
     const [totalRecords, setTotalRecords] = useState(0);
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)

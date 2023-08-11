@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import CrmService from "../../services/crmServices";
 import BasicDetails from "./basicDetails";
 import BookingPlans from "./bookingPlans";
 import Operations from "./operations";
@@ -49,12 +48,9 @@ export default function PropertyOnBoard() {
         is_available: ""
     });
 
-    const getData = async () => {
-        const res = await CrmService.getProperties();
-    };
+    
 
     useEffect(() => {
-        getData();
 
         // Create an Intersection Observer instance
         const observer = new IntersectionObserver(handleIntersection, {

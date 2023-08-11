@@ -13,7 +13,6 @@ export default function StateDashBoard() {
     const [state, setState] = useState([])
     const [stateFilter, setStateFilter] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage, setRecordsPerPage] = useState(10);
     const [totalRecords, setTotalRecords] = useState(0);
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
@@ -26,6 +25,7 @@ export default function StateDashBoard() {
             is_active: false,
             meta: {}
     })
+    let recordsPerPage = 10
     const submitHandler = async () => {
         if (!isUpdating) {
             console.log(stateSchema,`stateSchema`)

@@ -9,10 +9,11 @@ import Fuse from "fuse.js";
 import Pagination from "../pagination";
 
 export default function PaymentPlanDashBoard() {
+    let recordsPerPage = 10
+
     const [paymentPlan, setPaymentPlan] = useState([])
     const [paymentPlanFilter, setPaymentPlanFilter] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage, setRecordsPerPage] = useState(10);
     const [totalRecords, setTotalRecords] = useState(0);
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)

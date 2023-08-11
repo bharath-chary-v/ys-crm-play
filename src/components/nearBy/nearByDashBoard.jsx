@@ -9,10 +9,12 @@ import Fuse from "fuse.js";
 import Pagination from "../pagination";
 
 export default function NearByDashBoard() {
+    let recordsPerPage = 10
+
     const [nearBy, setNearBy] = useState([])
     const [nearByFilter, setNearByFilter] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage, setRecordsPerPage] = useState(10);
+
     const [totalRecords, setTotalRecords] = useState(0);
     const [open, setOpen] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
