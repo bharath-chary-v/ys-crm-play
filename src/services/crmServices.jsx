@@ -202,6 +202,48 @@ class crmService {
             data
         });
     }
+    getVendors() {
+        return axios({
+            method: HTTP_METHODS.GET,
+            url: `${this.crmConfig.url}/${this.crmConfig.path.vendors.getVendors}`,
+
+        });
+    }
+    addVendor(data) {
+        return axios({
+            method: HTTP_METHODS.POST,
+            url: `${this.crmConfig.url}/${this.crmConfig.path.vendors.addVendor}`,
+            data
+        });
+    }
+    updateVendor(data) {
+        return axios({
+            method: HTTP_METHODS.PUT,
+            url: `${this.crmConfig.url}/${this.crmConfig.path.vendors.updateVendor}/${data?.id}`,
+            data
+        });
+    }
+    getAddOnServices() {
+        return axios({
+            method: HTTP_METHODS.GET,
+            url: `${this.crmConfig.url}/${this.crmConfig.path.addon_services.getAddOnServices}`,
+
+        });
+    }
+    addAddOnService(data) {
+        return axios({
+            method: HTTP_METHODS.POST,
+            url: `${this.crmConfig.url}/${this.crmConfig.path.addon_services.addAddOnServices}`,
+            data
+        });
+    }
+    updateAddOnService(data) {
+        return axios({
+            method: HTTP_METHODS.PUT,
+            url: `${this.crmConfig.url}/${this.crmConfig.path.addon_services.updateAddOnServices}/${data?.id}`,
+            data
+        });
+    }
     getProperties() {
         return axios({
             method: HTTP_METHODS.GET,

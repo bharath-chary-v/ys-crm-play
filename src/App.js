@@ -13,6 +13,9 @@ import PropertyOnBoard from "./components/property/propertyOnBoard";
 import RoomTypeDashBoard from "./components/roomTypes/roomTypeDashBoard";
 import SideNav from "./components/sideNav/sideNav";
 import StateDashBoard from "./components/state/stateDashBoard";
+import "react-toastify/dist/ReactToastify.css";
+import VendorDashBoard from "./components/vendor/vendorDashBoard";
+import AddOnServiceDashBoard from "./components/addOnServices/addOnServiceDashBoard";
 
 function App() {
   return (
@@ -31,6 +34,10 @@ function App() {
             <Route path="/masters/roomTypes" element={<RoomTypeDashBoard />} />
             <Route path="/masters/paymentPlans" element={<PaymentPlanDashBoard />} />
             <Route path="/masters/direct_services" element={<DirectServicesDashboard />} />
+            <Route path="/masters/addonservices" element={<AddOnServiceDashBoard />} />
+
+            <Route path="/masters/vendors" element={<VendorDashBoard />} />
+
             <Route path="/food/food_category" element={<FoodCategoryDashBoard />} />
             <Route path="/food/food_item" element={<FoodItemDashBoard />} />
 

@@ -226,6 +226,30 @@ const SideNav = () => {
                                         NearBy
                                     </Link>
                                 </li>
+                                <li
+                                    className={`px-4 py-3 ${isActiveLink("/vendors") ? "bg-white text-orange-500" : ""
+                                        }`}
+                                >
+                                    <Link to="/masters/vendors" className="block font-semibold">
+                                        Vendors
+                                    </Link>
+                                </li>
+                                <li
+                                    className={`px-4 py-3 ${isActiveLink("/direct_services") ? "bg-white text-orange-500" : ""
+                                        }`}
+                                >
+                                    <Link to="/masters/direct_services" className="block font-semibold">
+                                        Direct Serices
+                                    </Link>
+                                </li>
+                                <li
+                                    className={`px-4 py-3 ${isActiveLink("/addonservices") ? "bg-white text-orange-500" : ""
+                                        }`}
+                                >
+                                    <Link to="/masters/addonservices" className="block font-semibold">
+                                        Add on Services
+                                    </Link>
+                                </li>
                             </ul>
                         )}
                     </li>

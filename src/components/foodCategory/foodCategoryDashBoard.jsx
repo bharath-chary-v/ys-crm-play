@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react"
 import FoodService from "../../services/foodErpService"
-import AddInstitute from "./addCategory"
+import AddFoodCategory from "./addCategory"
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -20,7 +20,7 @@ export default function FoodCategoryDashBoard() {
     const [foodCategorySchema, setFoodCategorySchema] = useState({
         id: "",
         name: "",
-        cluster_id: "",
+        is_active:false
     })
 
 
@@ -58,8 +58,7 @@ export default function FoodCategoryDashBoard() {
             ...foodCategorySchema,
             id: res?.id,
             name: res?.name,
-            cluster_id: res?.cluster_id,
-
+            is_active:res?.is_active
         })
         setOpen(true)
         setIsUpdating(true)
@@ -84,7 +83,8 @@ export default function FoodCategoryDashBoard() {
         setFoodCategorySchema({
             id: "",
             name: "",
-            cluster_id: "",
+            is_active:false
+
         })
     }
     const deleteHandler = async (data) => {
@@ -113,7 +113,8 @@ export default function FoodCategoryDashBoard() {
         setFoodCategorySchema({ 
             id: "",
             name: "",
-            cluster_id: "", 
+            is_active:false
+
         })
     }, [])
 
@@ -229,7 +230,7 @@ export default function FoodCategoryDashBoard() {
                 totalPages={Math.ceil(totalRecords / recordsPerPage)}
                 onPageChange={setCurrentPage}
             />
-            <AddInstitute
+            <AddFoodCategory
                 open={open}
                 setOpen={setOpen}
                 foodCategorySchema={foodCategorySchema}

@@ -4,13 +4,7 @@ import { Dialog, Transition } from '@headlessui/react'
 
 
 
-
-
-
 export default function AddInstitute({ open, setOpen, roomTypeSchema, setRoomTypeSchema, submitHandler }) {
-
-  
-
 
 
 

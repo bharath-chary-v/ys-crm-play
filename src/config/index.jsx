@@ -53,6 +53,18 @@ class CONFIG {
                 property:{
                     getProperties:"crm_dashboard/v1/admin/properties",
                     addProperties:"crm_dashboard/v1/admin/properties"
+                },
+                vendors:{
+                    getVendors:"crm_dashboard/v1/admin/vendors",
+                    addVendor:"crm_dashboard/v1/admin/vendors",
+                    updateVendor:"crm_dashboard/v1/admin/vendors",
+                    getVendorDetails:"crm_dashboard/v1/admin/vendors"
+                },
+                addon_services:{
+                    getAddOnServices:"/crm_dashboard/v1/admin/addon_services",
+                    addAddOnServices:"/crm_dashboard/v1/admin/addon_services",
+                    updateAddOnServices:"/crm_dashboard/v1/admin/addon_services",
+                    getAddOnServicesDetails:"/crm_dashboard/v1/admin/addon_services"
                 }
             },
 
@@ -64,7 +76,7 @@ class CONFIG {
             path:{
                 foodCategory: {
                     getFoodCategory: `food_category`,
-                    addFoodCategory: `food_categorys`,
+                    addFoodCategory: `food_category`,
                     updateFoodCategory: `food_category`
                 },
                 foodItem: {
@@ -72,6 +84,9 @@ class CONFIG {
                     addFoodItem: `food_item`,
                     updateFoodItem: `food_item`
                 },
+                propertyFoodMapping:{
+
+                }
             }
         } 
     }

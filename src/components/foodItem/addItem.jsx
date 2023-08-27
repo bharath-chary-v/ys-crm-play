@@ -3,6 +3,8 @@ import { Dialog, Transition } from '@headlessui/react'
 import CrmService from '../../services/crmServices'
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
+import FoodService from '../../services/foodErpService'
+import { ToastContainer, toast } from "react-toastify";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -11,34 +13,41 @@ function classNames(...classes) {
 
 
 export default function AddInstitute({ open, setOpen, foodItemSchema, setFoodItemSchema, submitHandler }) {
+  const [foodCategory, setFoodCategory] = useState([]);
 
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState("");
+  const getFoodCategory = async () => {
+    try {
+      const response = await FoodService.getFoodCategories();
+      const data = response?.data?.data;
+      console.log(data, `getFoodCategories`)
+      setFoodCategory(data);
+      toast.success("Food categories fetched successfully!");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to fetch food categories. Please try again.");
+    }
+  };
+  const selectedCategory = foodCategory?.find(category => category.id === foodItemSchema.food_category_id);
+  console.log(foodCategory, foodItemSchema, `selectedCategory`)
+  const filteredCategory =
+    query === ""
+      ? foodCategory
+      : foodCategory?.filter((category) =>
+        category?.name?.toLowerCase().includes(query.toLowerCase())
+      );
 
-  const [cluster, setCluster] = useState([])
+  const handlefoodCategory = (category) => {
+    console.log(category, `1232122`)
 
-
-
-  const getData = async () => {
-    const res = await CrmService.getCluster()
-    console.log(res?.data?.data, `getData`)
-    setCluster(res?.data?.data)
-  }
-  const selectedCluster = cluster.find(city => city.id === foodItemSchema.cluster_id);
-
-  const filteredCity =
-    query === ''
-      ? cluster
-      : cluster.filter((city) => {
-        return cluster.cluster_name.toLowerCase().includes(query.toLowerCase())
-      })
+    // setQuery(category.name);
+    // setFoodItemSchema({ ...foodItemSchema, food_category_id: category.id });
+    toast.success("Food category selected successfully!");
+  };
   useEffect(() => {
-    getData()
+    getFoodCategory()
   }, [])
 
-  const handleCityChange = (cityId) => {
-    console.log(cityId,`cityIdcityId`)
-    setFoodItemSchema({ ...foodItemSchema, cluster_id: cityId });
-  };
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
@@ -67,7 +76,7 @@ export default function AddInstitute({ open, setOpen, foodItemSchema, setFoodIte
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6">
                 <div className="w-96  border-b border-gray-900/10 pb-12">
-                  <h2 className="text-base font-semibold leading-7 text-gray-900">Add Institute Information</h2>
+                  <h2 className="text-base font-semibold leading-7 text-gray-900">Add Food item</h2>
 
 
                   <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -89,44 +98,44 @@ export default function AddInstitute({ open, setOpen, foodItemSchema, setFoodIte
 
 
 
-
-                  
                     <div className="col-span-full">
-                    <Combobox as="div" value={foodItemSchema.cluster_id} onChange={handleCityChange}>
+                      <Combobox as="div" value={selectedCategory?.id} onChange={handlefoodCategory}>
                         <Combobox.Label className="block text-sm font-medium leading-6 text-gray-900">Cluster</Combobox.Label>
                         <div className="relative mt-2">
                           <Combobox.Input
                             className="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             onChange={(event) => setQuery(event.target.value)}
-                            value={selectedCluster ? selectedCluster?.cluster_name : ''}
-                            displayValue={(clusterId) => clusterId}
+                            value={selectedCategory ? selectedCategory.name : ''}
+
                           />
                           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
                             <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                           </Combobox.Button>
 
-                          {filteredCity.length > 0 && (
+                          {filteredCategory?.length > 0 && (
                             <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                              {filteredCity.map((city) => (
+                              {filteredCategory?.map((category) => (
                                 <Combobox.Option
-                                  key={city.id}
-                                  value={city?.id}
+                                  key={category?.id}
+                                  value={category?.id}
                                   className={({ active }) =>
                                     classNames(
-                                      'relative cursor-default select-none py-2 pl-3 pr-9',
-                                      active ? 'bg-indigo-600 text-white' : 'text-gray-900'
+                                      "relative cursor-default select-none py-2 pl-3 pr-9",
+                                      active ? "bg-indigo-600 text-white" : "text-gray-900"
                                     )
                                   }
                                 >
                                   {({ active, selected }) => (
                                     <>
-                                      <span className={classNames('block truncate', selected && 'font-semibold')}>{city?.cluster_name}</span>
+                                      <span className={classNames("block truncate", selected && "font-semibold")}>
+                                        {category.name}
+                                      </span>
 
                                       {selected && (
                                         <span
                                           className={classNames(
-                                            'absolute inset-y-0 right-0 flex items-center pr-4',
-                                            active ? 'text-white' : 'text-indigo-600'
+                                            "absolute inset-y-0 right-0 flex items-center pr-4",
+                                            active ? "text-white" : "text-indigo-600"
                                           )}
                                         >
                                           <CheckIcon className="h-5 w-5" aria-hidden="true" />
@@ -141,11 +150,114 @@ export default function AddInstitute({ open, setOpen, foodItemSchema, setFoodIte
                         </div>
                       </Combobox>
                     </div>
-                   
-
-                   
 
 
+                    <div className="sm:col-span-3">
+                      <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
+                        Minimum Order Quantity
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          type="number"
+                          name="cluster_name"
+                          id="cluster_name"
+                          value={foodItemSchema.minimum_order_qty} // Make sure to bind the input value to the city_name property
+                          onChange={(e) => setFoodItemSchema({ ...foodItemSchema, minimum_order_qty: e.target.value })}
+                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                    <div className="sm:col-span-3">
+                      <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
+                      Maximum Order Quantity
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          type="number"
+                          name="cluster_name"
+                          id="cluster_name"
+                          value={foodItemSchema.maximum_order_qty} // Make sure to bind the input value to the city_name property
+                          onChange={(e) => setFoodItemSchema({ ...foodItemSchema, maximum_order_qty: e.target.value })}
+                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-span-4">
+                      <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
+                      base amount
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          type="text"
+                          name="cluster_name"
+                          id="cluster_name"
+                          value={foodItemSchema.base_amount} // Make sure to bind the input value to the city_name property
+                          onChange={(e) => setFoodItemSchema({ ...foodItemSchema, base_amount: e.target.value })}
+                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                    <div className="sm:col-span-3">
+                      <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
+                      service charges
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          type="text"
+                          name="cluster_name"
+                          id="cluster_name"
+                          value={foodItemSchema.service_charges} // Make sure to bind the input value to the city_name property
+                          onChange={(e) => setFoodItemSchema({ ...foodItemSchema, service_charges: e.target.value })}
+                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-span-4">
+                      <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
+                     Tax value type
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          type="text"
+                          name="cluster_name"
+                          id="cluster_name"
+                          value={foodItemSchema.tax_value_type} // Make sure to bind the input value to the city_name property
+                          onChange={(e) => setFoodItemSchema({ ...foodItemSchema, tax_value_type: e.target.value })}
+                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-span-4">
+                      <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
+                      Tax Value
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          type="text"
+                          name="cluster_name"
+                          id="cluster_name"
+                          value={foodItemSchema.tax_value} // Make sure to bind the input value to the city_name property
+                          onChange={(e) => setFoodItemSchema({ ...foodItemSchema, tax_value: e.target.value })}
+                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-span-4">
+                      <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
+                     Image
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          type="text"
+                          name="cluster_name"
+                          id="cluster_name"
+                          value={foodItemSchema.image_url} // Make sure to bind the input value to the city_name property
+                          onChange={(e) => setFoodItemSchema({ ...foodItemSchema, image_url: e.target.value })}
+                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
                   </div>
                   <button
                     type="button"
@@ -155,11 +267,13 @@ export default function AddInstitute({ open, setOpen, foodItemSchema, setFoodIte
                     Submit
                   </button>
                 </div>
+                <ToastContainer position="top-center" autoClose={3000} />
               </Dialog.Panel>
             </Transition.Child>
           </div>
         </div>
       </Dialog>
     </Transition.Root>
+
   )
 }
